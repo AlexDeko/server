@@ -3,6 +3,15 @@ plugins {
     id("org.flywaydb.flyway") version "5.2.4"
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+application {
+    mainClassName = "com.post.ApplicationKt"
+}
+
 group 'ServerKtor'
 version '1.0-SNAPSHOT'
 
@@ -37,4 +46,8 @@ compileKotlin {
 }
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.register("stage") {
+    dependsOn("installDist")
 }
