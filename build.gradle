@@ -1,8 +1,17 @@
 plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.50'
     id("org.flywaydb.flyway") version "5.2.4"
+    id("java")
     id 'application'
 
+}
+
+flyway {
+    url = System.getenv("DB_URL")
+    user = System.getenv("DB_USER")
+    password = System.getenv("DB_PASSWORD")
+    baselineOnMigrate = true
+    locations = arrayOf("filesystem:resources/db/migration")
 }
 
 java {
