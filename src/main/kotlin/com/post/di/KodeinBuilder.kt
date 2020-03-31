@@ -41,7 +41,7 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                     init()
                 }
             }
-            constant(tag = UPLOAD_DIR) with (environment.config.propertyOrNull("memebattle.upload.dir")?.getString()
+            constant(tag = UPLOAD_DIR) with (environment.config.propertyOrNull("server.upload.dir")?.getString()
                 ?: throw ConfigurationException("Upload dir is not specified"))
             bind<PasswordEncoder>() with eagerSingleton { BCryptPasswordEncoder() }
             bind<JWTTokenService>() with eagerSingleton { JWTTokenService() }
