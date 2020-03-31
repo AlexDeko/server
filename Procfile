@@ -1,1 +1,1 @@
-web: $START_SCRIPT_PATH
+web: ./build/install/server/bin/server

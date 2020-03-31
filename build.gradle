@@ -20,7 +20,7 @@ java {
 }
 
 application {
-    mainClassName = "com.post.Application"
+    mainClassName = "com.post.ApplicationKt"
 }
 
 compileKotlin {
