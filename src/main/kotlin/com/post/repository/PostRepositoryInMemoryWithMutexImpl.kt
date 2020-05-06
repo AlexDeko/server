@@ -1,5 +1,6 @@
 package com.post.repository
 
+import com.post.dto.LikeDto
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import com.post.model.PostModel
@@ -30,7 +31,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                     copy
                 }
                 else -> {
-                    val copy = items[index].copy(author = item.author, content = item.content)
+                    val copy = items[index].copy(author = item.author, text = item.text)
                     items[index] = copy
                     copy
                 }
@@ -50,7 +51,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(likes = item.likes + 1)
+                    val copy = item.copy(like = LikeDto(item.like.count + 1L, item.like.isLiked))
                     try {
                         items[index] = copy
                     } catch (e: ArrayIndexOutOfBoundsException) {

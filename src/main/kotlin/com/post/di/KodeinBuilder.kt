@@ -49,7 +49,6 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             bind<PostService>() with eagerSingleton { PostService(instance()) }
             bind<FileService>() with eagerSingleton { FileService(instance(tag = UPLOAD_DIR)) }
             bind<UserRepository>() with eagerSingleton { UserRepositoryImpl() }
-            bind<ScheduleRepository>() with eagerSingleton { ScheduleRepositoryImpl() }
             bind<UserService>() with eagerSingleton { UserService(instance(), instance(), instance()) }
             bind<RoutingV1>() with eagerSingleton {
                 RoutingV1(

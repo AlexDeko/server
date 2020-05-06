@@ -12,8 +12,5 @@ data class UserModel(
 
 fun UserModel.toDto() = UserResponseDto(
     id,
-    username,
-    Random.nextInt(10),
-    Random.nextFloat(),
-    emptyList()
+    username
 )
