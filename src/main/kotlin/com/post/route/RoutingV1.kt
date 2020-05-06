@@ -13,7 +13,6 @@ import com.post.auth.BasicAuth
 import com.post.auth.JwtAuth
 import com.post.dto.AuthenticationRequestDto
 import com.post.dto.PostRequestDto
-import com.post.dto.schdule.ScheduleDayRequestDto
 import com.post.dto.user.UserRegisterRequestDto
 import com.post.model.toDto
 import com.post.route.me
@@ -23,8 +22,7 @@ class RoutingV1(
     private val staticPath: String,
     private val postService: PostService,
     private val fileService: FileService,
-    private val userService: UserService,
-    private val scheduleService: ScheduleService
+    private val userService: UserService
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
@@ -77,18 +75,6 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
-                        }
-                    }
-
-                    route("/schedule") {
-                        get {
-                            val response = scheduleService.getAll()
-                            call.respond(response)
-                        }
-                        post {
-                            val input = call.receive<ScheduleDayRequestDto>()
-                            val response = scheduleService.insert(input)
-                            call.respond(HttpStatusCode.OK)
                         }
                     }
                 }

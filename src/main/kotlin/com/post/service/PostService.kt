@@ -17,10 +17,21 @@ class PostService(private val repo: PostRepository) {
     }
 
     suspend fun save(input: PostRequestDto): PostResponseDto {
+        input.countViews += 1
         val model = PostModel(
             id = input.id,
             author = input.author,
-            content = input.content
+            postType = input.postType,
+            text = input.text,
+            date = input.date,
+            like = input.like,
+            comment = input.comment,
+            reply = input.reply,
+            address = input.address,
+            coordinates = input.coordinates,
+            video = input.video,
+            adsUrl = input.adsUrl,
+            countViews = input.countViews
         )
         return PostResponseDto.fromModel(repo.save(model))
     }
