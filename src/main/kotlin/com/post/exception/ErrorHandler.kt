@@ -23,6 +23,9 @@ object ErrorHandler {
             exception<NotFoundException> {
                 call.respond(HttpStatusCode.NotFound)
             }
+            exception<ForbiddenException> {
+                call.respond(HttpStatusCode.Forbidden)
+            }
         }
     }
 }
