@@ -19,7 +19,8 @@ data class PostModel(
     val coordinates: Long? = null,
     val video: VideoDto? = null,
     val adsUrl: String? = null,
-    val countViews: Long = 0
+    val countViews: Long = 0,
+    val parentId: Long? = null
 )
 
 enum class PostType {

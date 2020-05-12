@@ -15,5 +15,6 @@ data class PostRequestDto(
     val coordinates: Long? = null,
     val video: VideoDto? = null,
     val adsUrl: String? = null,
-    var countViews: Long = 0
+    var countViews: Long = 0,
+    val parentId: Long? = null
 )

@@ -7,6 +7,7 @@ import com.post.model.PostModel
 import com.post.repository.PostRepository
 
 class PostService(private val repo: PostRepository) {
+
     suspend fun getAll(): List<PostResponseDto> {
         return repo.getAll().map { PostResponseDto.fromModel(it) }
     }
@@ -34,5 +35,19 @@ class PostService(private val repo: PostRepository) {
             countViews = input.countViews
         )
         return PostResponseDto.fromModel(repo.save(model))
+    }
+
+    suspend fun removeById(id: Long) {
+        repo.removeById(id)
+    }
+
+    suspend fun likedById(id: Long): PostResponseDto {
+        val model = repo.likeById(id) ?: throw NotFoundException()
+        return PostResponseDto.fromModel(model)
+    }
+
+    suspend fun dislikeById(id: Long): PostResponseDto {
+        val model = repo.dislikeById(id) ?: throw NotFoundException()
+        return PostResponseDto.fromModel(model)
     }
 }

@@ -51,7 +51,6 @@ class RoutingV1(
                             call.respond(requireNotNull(me).toDto())
                         }
                     }
-
                     route("/posts") {
                         get {
                             val response = postService.getAll()
@@ -70,11 +69,31 @@ class RoutingV1(
                             val response = postService.save(input)
                             call.respond(response)
                         }
+
+                        post("/{id}") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val response = postService.likedById(id)
+                            call.respond(response)
+                        }
+
+                        post("/{id}") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val response = postService.dislikeById(id)
+                            call.respond(response)
+                        }
+
                         delete("/{id}") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
                             )
+                            postService.removeById(id)
                         }
                     }
                 }

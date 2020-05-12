@@ -51,13 +51,8 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(like = LikeDto(item.like.count + 1L, item.like.isLiked))
-                    try {
-                        items[index] = copy
-                    } catch (e: ArrayIndexOutOfBoundsException) {
-                        println("size: ${items.size}")
-                        println(index)
-                    }
+                    val copy = item.copy(like = LikeDto(item.like.count + 1L, true))
+                    items[index] = copy
                     copy
                 }
             }
@@ -65,7 +60,17 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
     }
 
     override suspend fun dislikeById(id: Long): PostModel? {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mutex.withLock {
+            return when (val index = items.indexOfFirst { it.id == id }) {
+                -1 -> null
+                else -> {
+                    val item = items[index]
+                    val copy = item.copy(like = LikeDto(item.like.count - 1L, false))
+                    items[index] = copy
+                    copy
+                }
+            }
+        }
     }
 }
 

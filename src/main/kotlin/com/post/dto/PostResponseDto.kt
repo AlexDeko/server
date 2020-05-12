@@ -16,7 +16,8 @@ data class PostResponseDto(
     private val coordinates: Long? = null,
     val video: VideoDto? = null,
     val adsUrl: String? = null,
-    val countViews: Long = 0
+    val countViews: Long = 0,
+    val parentId: Long? = null
 ) {
     companion object {
         fun fromModel(model: PostModel) = PostResponseDto(
@@ -32,7 +33,8 @@ data class PostResponseDto(
             coordinates = model.coordinates,
             video = model.video,
             adsUrl = model.adsUrl,
-            countViews = model.countViews
+            countViews = model.countViews,
+            parentId = model.parentId
         )
     }
 }
