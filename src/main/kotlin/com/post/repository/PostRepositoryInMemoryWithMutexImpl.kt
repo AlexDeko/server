@@ -59,6 +59,13 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
         }
     }
 
+    override suspend fun repostById(id: Long): PostModel? {
+        mutex.withLock {
+            val newItemRepost = items.find { it.id == id }?.copy(id = items.lastIndex + 1L, parentId = id)
+            return newItemRepost
+        }
+    }
+
     override suspend fun dislikeById(id: Long): PostModel? {
         mutex.withLock {
             return when (val index = items.indexOfFirst { it.id == id }) {

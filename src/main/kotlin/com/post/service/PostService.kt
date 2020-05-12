@@ -46,6 +46,11 @@ class PostService(private val repo: PostRepository) {
         return PostResponseDto.fromModel(model)
     }
 
+    suspend fun repostById(id: Long): PostResponseDto {
+        val model = repo.repostById(id) ?: throw NotFoundException()
+        return PostResponseDto.fromModel(model)
+    }
+
     suspend fun dislikeById(id: Long): PostResponseDto {
         val model = repo.dislikeById(id) ?: throw NotFoundException()
         return PostResponseDto.fromModel(model)

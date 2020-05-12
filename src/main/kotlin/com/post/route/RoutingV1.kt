@@ -79,7 +79,7 @@ class RoutingV1(
                             call.respond(response)
                         }
 
-                        post("/{id}") {
+                        post("/{id}/likes") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
@@ -88,12 +88,22 @@ class RoutingV1(
                             call.respond(response)
                         }
 
-                        delete("/{id}") {
+                        post("/{id}/reposts") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val response = postService.repostById(id)
+                            call.respond(response)
+                        }
+
+                        delete("/{id}/likes") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
                             )
                             postService.removeById(id)
+                            call.respond(HttpStatusCode.NoContent)
                         }
                     }
                 }
