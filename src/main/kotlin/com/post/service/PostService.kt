@@ -17,10 +17,11 @@ class PostService(private val repo: PostRepository) {
         return PostResponseDto.fromModel(model)
     }
 
-    suspend fun save(input: PostRequestDto): PostResponseDto {
+    suspend fun save(input: PostRequestDto, ownerId: Long): PostResponseDto {
         input.countViews += 1
         val model = PostModel(
             id = input.id,
+            ownerId = input.ownerId,
             author = input.author,
             postType = input.postType,
             text = input.text,
@@ -34,11 +35,11 @@ class PostService(private val repo: PostRepository) {
             adsUrl = input.adsUrl,
             countViews = input.countViews
         )
-        return PostResponseDto.fromModel(repo.save(model))
+        return PostResponseDto.fromModel(repo.save(model, ownerId))
     }
 
-    suspend fun removeById(id: Long) {
-        repo.removeById(id)
+    suspend fun removeById(id: Long, ownerId: Long) {
+        repo.removeById(id, ownerId)
     }
 
     suspend fun likedById(id: Long): PostResponseDto {

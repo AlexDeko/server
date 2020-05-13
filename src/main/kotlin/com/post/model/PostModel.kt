@@ -8,6 +8,7 @@ import com.post.dto.VideoDto
 
 data class PostModel(
     val id: Long,
+    val ownerId: Long,
     val author: String,
     val postType: PostType = PostType.POST,
     val text: String? = null,
@@ -20,7 +21,8 @@ data class PostModel(
     val video: VideoDto? = null,
     val adsUrl: String? = null,
     val countViews: Long = 0,
-    val parentId: Long? = null
+    val parentId: Long? = null,
+    val imageId: Long? = null
 )
 
 enum class PostType {

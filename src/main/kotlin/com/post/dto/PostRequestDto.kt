@@ -4,6 +4,7 @@ import com.post.model.PostType
 
 data class PostRequestDto(
     val id: Long,
+    val ownerId: Long,
     val author: String,
     val postType: PostType = PostType.POST,
     val text: String? = null,
@@ -16,5 +17,6 @@ data class PostRequestDto(
     val video: VideoDto? = null,
     val adsUrl: String? = null,
     var countViews: Long = 0,
-    val parentId: Long? = null
+    val parentId: Long? = null,
+    val imageId: Long? = null
 )

@@ -1,9 +1,11 @@
 package com.post.repository
 
 import com.post.dto.LikeDto
+import com.post.exception.ForbiddenException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import com.post.model.PostModel
+import com.post.route.me
 
 class PostRepositoryInMemoryWithMutexImpl : PostRepository {
     private var nextId = 1L
@@ -22,15 +24,16 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
         }
     }
 
-    override suspend fun save(item: PostModel): PostModel {
+    override suspend fun save(item: PostModel, ownerId: Long): PostModel {
         mutex.withLock {
             return when (val index = items.indexOfFirst { it.id == item.id }) {
                 -1 -> {
-                    val copy = item.copy(id = nextId++)
+                    val copy = item.copy(id = nextId++, ownerId = ownerId)
                     items.add(copy)
                     copy
                 }
                 else -> {
+                    if (item.ownerId != ownerId) throw ForbiddenException("Нет прав доступа")
                     val copy = items[index].copy(author = item.author, text = item.text)
                     items[index] = copy
                     copy
@@ -39,8 +42,9 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
         }
     }
 
-    override suspend fun removeById(id: Long) {
+    override suspend fun removeById(id: Long, ownerId: Long) {
         mutex.withLock {
+            if (getById(id)?.ownerId != ownerId) throw ForbiddenException("Нет прав доступа")
             items.removeIf { it.id == id }
         }
     }

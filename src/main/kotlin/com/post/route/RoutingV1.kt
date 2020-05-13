@@ -14,6 +14,7 @@ import com.post.auth.JwtAuth
 import com.post.dto.AuthenticationRequestDto
 import com.post.dto.PostRequestDto
 import com.post.dto.user.UserRegisterRequestDto
+import com.post.exception.ForbiddenException
 import com.post.model.toDto
 import com.post.route.me
 import com.post.service.*
@@ -97,7 +98,7 @@ class RoutingV1(
                             call.respond(response)
                         }
 
-                        delete("/{id}/likes") {
+                        delete("/{id}") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
@@ -106,13 +107,12 @@ class RoutingV1(
                             call.respond(HttpStatusCode.NoContent)
                         }
                     }
-                }
-
-                route("/media") {
-                    post {
-                        val multipart = call.receiveMultipart()
-                        val response = fileService.save(multipart)
-                        call.respond(response)
+                    route("/media") {
+                        post {
+                            val multipart = call.receiveMultipart()
+                            val response = fileService.save(multipart)
+                            call.respond(response)
+                        }
                     }
                 }
             }

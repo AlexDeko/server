@@ -5,6 +5,7 @@ import com.post.model.PostType
 
 data class PostResponseDto(
     val id: Long,
+    val ownerId: Long,
     val author: String,
     val postType: PostType = PostType.POST,
     val text: String? = null,
@@ -17,11 +18,13 @@ data class PostResponseDto(
     val video: VideoDto? = null,
     val adsUrl: String? = null,
     val countViews: Long = 0,
-    val parentId: Long? = null
+    val parentId: Long? = null,
+    val imageId: Long? = null
 ) {
     companion object {
         fun fromModel(model: PostModel) = PostResponseDto(
             id = model.id,
+            ownerId = model.ownerId,
             author = model.author,
             postType = model.postType,
             text = model.text,
@@ -34,7 +37,8 @@ data class PostResponseDto(
             video = model.video,
             adsUrl = model.adsUrl,
             countViews = model.countViews,
-            parentId = model.parentId
+            parentId = model.parentId,
+            imageId = model.imageId
         )
     }
 }
