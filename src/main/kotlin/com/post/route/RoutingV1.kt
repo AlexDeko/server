@@ -67,7 +67,7 @@ class RoutingV1(
                         }
                         post {
                             val input = call.receive<PostRequestDto>()
-                            val response = postService.save(input)
+                            val response = postService.save(input, me!!.id)
                             call.respond(response)
                         }
 
@@ -103,7 +103,7 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
-                            postService.removeById(id)
+                            postService.removeById(id, me!!.id)
                             call.respond(HttpStatusCode.NoContent)
                         }
                     }
