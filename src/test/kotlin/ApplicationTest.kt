@@ -32,9 +32,11 @@ class ApplicationTest {
 
     private val configure: Application.() -> Unit = {
         (environment.config as MapApplicationConfig).apply {
+            put("com.post.jwt.secret", "secret")
             put("db.jdbcUrl",
                 "postgres://${postgresContainer.username}:${postgresContainer.password}@${postgresContainer.containerIpAddress}:${postgresContainer.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgresContainer.databaseName}")
             put("server.upload.dir", uploadPath)
+
         }
         module()
     }

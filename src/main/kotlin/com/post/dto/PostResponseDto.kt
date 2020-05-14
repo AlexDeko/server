@@ -11,17 +11,16 @@ data class PostResponseDto(
     var content: String? = null,
     var countLike: Long = 0,
     var isLike: Boolean = false,
-    var countRepost: Int = 0,
+    var countRepost: Long = 0,
     val type: PostType = PostType.POST,
     val adsUrl: String? = null,
     var countViews: Long = 0,
     val parentId: Long? = null,
-    val source: PostModel? = null,
     val imageId: Long? = null,
     val videoUrl: String? = null,
     val countComment: Long = 0,
     val isCanCommented: Boolean = true,
-    val location: String? = null
+    val selectedLocation: String? = null
 ) {
     companion object {
         fun fromModel(model: PostModel) = PostResponseDto(
@@ -37,12 +36,11 @@ data class PostResponseDto(
             adsUrl = model.adsUrl,
             countViews = model.countViews,
             parentId = model.parentId,
-            source = model.source,
             imageId = model.imageId,
             videoUrl = model.videoUrl,
             countComment = model.countComment,
             isCanCommented = model.isCanCommented,
-            location = model.location
+            selectedLocation = model.selectedLocation
         )
     }
 }

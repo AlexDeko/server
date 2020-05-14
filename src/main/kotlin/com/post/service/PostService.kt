@@ -32,12 +32,11 @@ class PostService(private val repo: PostRepository) {
             adsUrl = input.adsUrl,
             countViews = input.countViews,
             parentId = input.parentId,
-            source = input.source,
             imageId = input.imageId,
             videoUrl = input.videoUrl,
             countComment = input.countComment,
             isCanCommented = input.isCanCommented,
-            location = input.location
+            selectedLocation = input.selectedLocation
         )
         return PostResponseDto.fromModel(repo.save(model, ownerId))
     }
