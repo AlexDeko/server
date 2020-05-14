@@ -23,17 +23,21 @@ class PostService(private val repo: PostRepository) {
             id = input.id,
             ownerId = input.ownerId,
             author = input.author,
-            postType = input.postType,
-            text = input.text,
-            date = input.date,
-            like = input.like,
-            comment = input.comment,
-            reply = input.reply,
-            address = input.address,
-            coordinates = input.coordinates,
-            video = input.video,
+            createdDate = input.createdDate,
+            content = input.content,
+            countLike = input.countLike,
+            isLike = input.isLike,
+            countRepost = input.countRepost,
+            type = input.type,
             adsUrl = input.adsUrl,
-            countViews = input.countViews
+            countViews = input.countViews,
+            parentId = input.parentId,
+            source = input.source,
+            imageId = input.imageId,
+            videoUrl = input.videoUrl,
+            countComment = input.countComment,
+            isCanCommented = input.isCanCommented,
+            location = input.location
         )
         return PostResponseDto.fromModel(repo.save(model, ownerId))
     }

@@ -1,11 +1,9 @@
 package com.post.repository
 
-import com.post.dto.LikeDto
 import com.post.exception.ForbiddenException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import com.post.model.PostModel
-import com.post.route.me
 
 class PostRepositoryInMemoryWithMutexImpl : PostRepository {
     private var nextId = 1L
@@ -34,7 +32,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 }
                 else -> {
                     if (item.ownerId != ownerId) throw ForbiddenException("Нет прав доступа")
-                    val copy = items[index].copy(author = item.author, text = item.text)
+                    val copy = items[index].copy(author = item.author, content = item.content)
                     items[index] = copy
                     copy
                 }
@@ -55,7 +53,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(like = LikeDto(item.like.count + 1L, true))
+                    val copy = item.copy(countLike = item.countLike + 1L, isLike =  true)
                     items[index] = copy
                     copy
                 }
@@ -76,7 +74,7 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
                 -1 -> null
                 else -> {
                     val item = items[index]
-                    val copy = item.copy(like = LikeDto(item.like.count - 1L, false))
+                    val copy = item.copy(item.countLike - 1L, isLike = false)
                     items[index] = copy
                     copy
                 }

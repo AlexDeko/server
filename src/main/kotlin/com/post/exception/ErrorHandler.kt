@@ -11,21 +11,19 @@ object ErrorHandler {
     @Suppress("EXPERIMENTAL_API_USAGE")
     fun setup(configuration: StatusPages.Configuration) {
         with(configuration) {
-            exception<NotImplementedError> {
-                call.respond(HttpStatusCode.NotImplemented)
-            }
-            exception<ParameterConversionException> {
-                call.respond(HttpStatusCode.BadRequest)
-            }
-            exception<UserExistsException> {
-                call.respond(HttpStatusCode.BadRequest)
-            }
-            exception<NotFoundException> {
-                call.respond(HttpStatusCode.NotFound)
-            }
-            exception<ForbiddenException> {
-                call.respond(HttpStatusCode.Forbidden)
-            }
+            respondAndThrow<NotImplementedError>(HttpStatusCode.NotImplemented)
+            respondAndThrow<ParameterConversionException>(HttpStatusCode.BadRequest)
+            respondAndThrow<UserExistsException>(HttpStatusCode.BadRequest)
+            respondAndThrow<NotFoundException>(HttpStatusCode.NotFound)
+            respondAndThrow<ForbiddenException>(HttpStatusCode.Forbidden)
+        }
+    }
+    private inline fun <reified T : Throwable> StatusPages.Configuration.respondAndThrow(
+        code: HttpStatusCode
+    ) {
+        exception<T> { e ->
+            call.respond(code)
+            throw e
         }
     }
 }

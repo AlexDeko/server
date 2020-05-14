@@ -1,28 +1,26 @@
 package com.post.model
 
 import com.google.gson.annotations.SerializedName
-import com.post.dto.CommentDto
-import com.post.dto.LikeDto
-import com.post.dto.RepostDto
-import com.post.dto.VideoDto
 
 data class PostModel(
     val id: Long,
     val ownerId: Long,
     val author: String,
-    val postType: PostType = PostType.POST,
-    val text: String? = null,
-    val date: String,
-    val like: LikeDto,
-    val comment: CommentDto,
-    val reply: RepostDto? = null,
-    val address: String? = null,
-    val coordinates: Long? = null,
-    val video: VideoDto? = null,
+    val createdDate: Long = (System.currentTimeMillis() / 1000L),
+    var content: String? = null,
+    var countLike: Long = 0,
+    var isLike: Boolean = false,
+    var countRepost: Int = 0,
+    val type: PostType = PostType.POST,
     val adsUrl: String? = null,
-    val countViews: Long = 0,
+    var countViews: Long = 0,
     val parentId: Long? = null,
-    val imageId: Long? = null
+    val source: PostModel? = null,
+    val imageId: Long? = null,
+    val videoUrl: String? = null,
+    val countComment: Long = 0,
+    val isCanCommented: Boolean = true,
+    val location: String? = null
 )
 
 enum class PostType {
