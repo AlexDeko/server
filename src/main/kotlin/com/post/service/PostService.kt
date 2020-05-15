@@ -18,7 +18,7 @@ class PostService(private val repo: PostRepository) {
     }
 
     suspend fun save(input: PostRequestDto, ownerId: Long): PostResponseDto {
-        input.countViews += 1
+
         val model = PostModel(
             id = input.id,
             ownerId = input.ownerId,
@@ -30,7 +30,7 @@ class PostService(private val repo: PostRepository) {
             countRepost = input.countRepost,
             type = input.type,
             adsUrl = input.adsUrl,
-            countViews = input.countViews,
+            countViews = input.countViews + 1,
             parentId = input.parentId,
             imageId = input.imageId,
             videoUrl = input.videoUrl,
