@@ -22,9 +22,9 @@ class PostRepositoryInMemoryWithMutexImpl : PostRepository {
         }
     }
 
-    override suspend fun save(item: PostModel, ownerId: Long): PostModel {
+    override suspend fun save(item: PostModel, ownerId: Long) {
         mutex.withLock {
-            return when (val index = items.indexOfFirst { it.id == item.id }) {
+            when (val index = items.indexOfFirst { it.id == item.id }) {
                 -1 -> {
                     val copy = item.copy(id = nextId++, ownerId = ownerId)
                     items.add(copy)
