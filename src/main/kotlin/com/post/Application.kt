@@ -1,5 +1,10 @@
 package com.post
 
+import com.post.auth.BasicAuth
+import com.post.auth.JwtAuth
+import com.post.di.KodeinBuilder
+import com.post.exception.ErrorHandler
+import com.post.route.RoutingV1
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -7,17 +12,12 @@ import io.ktor.auth.basic
 import io.ktor.auth.jwt.jwt
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.StatusPages
-import io.ktor.gson.gson
 import io.ktor.routing.Routing
+import io.ktor.serialization.serialization
 import io.ktor.server.cio.EngineMain
 import org.kodein.di.generic.instance
 import org.kodein.di.ktor.KodeinFeature
 import org.kodein.di.ktor.kodein
-import com.post.auth.BasicAuth
-import com.post.auth.JwtAuth
-import com.post.di.KodeinBuilder
-import com.post.exception.ErrorHandler
-import com.post.route.RoutingV1
 
 fun main(args: Array<String>) {
     EngineMain.main(args)
@@ -25,10 +25,7 @@ fun main(args: Array<String>) {
 
 fun Application.module() {
     install(ContentNegotiation) {
-        gson {
-            setPrettyPrinting()
-            serializeNulls()
-        }
+        serialization()
     }
 
     install(StatusPages) {

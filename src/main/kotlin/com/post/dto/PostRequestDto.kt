@@ -1,5 +1,8 @@
 package com.post.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class PostRequestDto(
     val id: Long,
     val ownerId: Long,

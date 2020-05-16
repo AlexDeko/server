@@ -1,7 +1,8 @@
 package com.post.model
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PostModel(
     val id: Long,
     val ownerId: Long,
@@ -21,16 +22,3 @@ data class PostModel(
     val isCanCommented: Boolean = true,
     val selectedLocation: String? = null
 )
-
-enum class PostType {
-    @SerializedName("PostType.POST")
-    POST,
-    @SerializedName("PostType.REPOST")
-    REPOST,
-    @SerializedName("PostType.ADS")
-    ADS,
-    @SerializedName("PostType.VIDEO")
-    VIDEO,
-    @SerializedName("PostType.EVENT")
-    EVENT
-}

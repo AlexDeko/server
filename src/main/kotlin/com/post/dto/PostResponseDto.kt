@@ -1,8 +1,9 @@
 package com.post.dto
 
 import com.post.model.PostModel
-import com.post.model.PostType
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class PostResponseDto(
     val id: Long,
     val ownerId: Long,
