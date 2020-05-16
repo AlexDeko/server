@@ -6,6 +6,7 @@ import com.post.db.dbQuery
 import com.post.exception.ForbiddenException
 import com.post.exception.NotFoundException
 import com.post.model.PostModel
+import com.post.model.PostTypeEnum
 import org.jetbrains.exposed.sql.*
 
 class PostRepositoryImpl : PostRepository {
@@ -140,7 +141,7 @@ class PostRepositoryImpl : PostRepository {
                 insertStatement[countLike] = originalPost.countLike
                 insertStatement[isLike] = originalPost.isLike
                 insertStatement[countRepost] = originalPost.countRepost
-                insertStatement[type] = originalPost.type
+                insertStatement[type] = PostTypeEnum.REPOST.name
                 insertStatement[adsUrl] = originalPost.adsUrl
                 insertStatement[countViews] = originalPost.countViews
                 insertStatement[parentId] = originalPost.id

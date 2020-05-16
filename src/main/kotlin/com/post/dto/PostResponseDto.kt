@@ -1,6 +1,7 @@
 package com.post.dto
 
 import com.post.model.PostModel
+import com.post.model.PostTypeEnum
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -13,7 +14,7 @@ data class PostResponseDto(
     val countLike: Long = 0,
     val isLike: Boolean = false,
     val countRepost: Long = 0,
-    val type: String = "пост",
+    val type: String = PostTypeEnum.POST.name,
     val adsUrl: String? = null,
     val countViews: Long = 0,
     val parentId: Long? = null,

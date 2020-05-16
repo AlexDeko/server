@@ -1,6 +1,7 @@
 package com.post.model
 
 import kotlinx.serialization.Serializable
+import ucar.nc2.stream.NcStreamProto
 
 @Serializable
 data class PostModel(
@@ -12,7 +13,7 @@ data class PostModel(
     val countLike: Long = 0,
     val isLike: Boolean = false,
     val countRepost: Long = 0,
-    val type: String = "пост",
+    val type: String = PostTypeEnum.POST.name,
     val adsUrl: String? = null,
     val countViews: Long = 0,
     val parentId: Long? = null,
