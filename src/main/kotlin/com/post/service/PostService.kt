@@ -50,8 +50,8 @@ class PostService(private val repo: PostRepository) {
         return PostResponseDto.fromModel(model)
     }
 
-    suspend fun repostById(id: Long): PostResponseDto {
-        val model = repo.repostById(id) ?: throw NotFoundException()
+    suspend fun repostById(id: Long, ownerId: Long): PostResponseDto {
+        val model = repo.repostById(id, ownerId) ?: throw NotFoundException()
         return PostResponseDto.fromModel(model)
     }
 

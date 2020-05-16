@@ -94,7 +94,7 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
-                            val response = postService.repostById(id)
+                            val response = postService.repostById(id, me!!.id)
                             call.respond(response)
                         }
 

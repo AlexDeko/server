@@ -126,15 +126,14 @@ class PostRepositoryImpl : PostRepository {
             post.copy(countLike = likes)
         }
 
-    override suspend fun repostById(id: Long): PostModel? =
+    override suspend fun repostById(id: Long, ownerId: Long): PostModel? =
         dbQuery {
             val originalPost = Posts.select {
                 Posts.id eq id
             }.singleOrNull()?.toPost() ?: throw NotFoundException("Нет такого поста")
 
             val newId = Posts.insert { insertStatement ->
-                // TODO Может тут автором должен стать человек, который сделал репост?
-                insertStatement[ownerId] = originalPost.ownerId
+                insertStatement[Posts.ownerId] = ownerId
                 insertStatement[author] = originalPost.author
                 insertStatement[createdDate] = originalPost.createdDate
                 insertStatement[content] = originalPost.content
