@@ -8,7 +8,7 @@ import com.post.exception.NotFoundException
 import com.post.model.PostModel
 import org.jetbrains.exposed.sql.*
 
-class PostRepositoryImpl: PostRepository {
+class PostRepositoryImpl : PostRepository {
     override suspend fun getAll(): List<PostModel> =
         dbQuery {
             Posts.selectAll().toList().map {
@@ -23,51 +23,60 @@ class PostRepositoryImpl: PostRepository {
             }.singleOrNull()?.toPost()
         }
 
-    override suspend fun save(item: PostModel, ownerId: Long) {
+    override suspend fun save(item: PostModel, ownerId: Long): PostModel =
         dbQuery {
+            val postId: Long
             when (item.id) {
-                0L -> Posts.insert { insertStatement ->
-                    insertStatement[Posts.id] = item.id
-                    insertStatement[Posts.ownerId] = ownerId
-                    insertStatement[Posts.author] = item.author
-                    insertStatement[Posts.createdDate] = item.createdDate
-                    insertStatement[Posts.content] = item.content
-                    insertStatement[Posts.countLike] = item.countLike
-                    insertStatement[Posts.isLike] = item.isLike
-                    insertStatement[Posts.countRepost] = item.countRepost
-                    insertStatement[Posts.type] = item.type
-                    insertStatement[Posts.adsUrl] = item.adsUrl
-                    insertStatement[Posts.countViews] = item.countViews + 1L
-                    insertStatement[Posts.parentId] = item.parentId
-                    insertStatement[Posts.imageId] = item.imageId
-                    insertStatement[Posts.videoUrl] = item.videoUrl
-                    insertStatement[Posts.countComment] = item.countComment
-                    insertStatement[Posts.isCanCommented] = item.isCanCommented
-                    insertStatement[Posts.selectedLocation] = item.selectedLocation
+                0L -> {
+                    postId = Posts.insert { insertStatement ->
+                        insertStatement[Posts.ownerId] = ownerId
+                        insertStatement[author] = item.author
+                        insertStatement[createdDate] = item.createdDate
+                        insertStatement[content] = item.content
+                        insertStatement[countLike] = item.countLike
+                        insertStatement[isLike] = item.isLike
+                        insertStatement[countRepost] = item.countRepost
+                        insertStatement[type] = item.type
+                        insertStatement[adsUrl] = item.adsUrl
+                        insertStatement[countViews] = item.countViews + 1L
+                        insertStatement[parentId] = item.parentId
+                        insertStatement[imageId] = item.imageId
+                        insertStatement[videoUrl] = item.videoUrl
+                        insertStatement[countComment] = item.countComment
+                        insertStatement[isCanCommented] = item.isCanCommented
+                        insertStatement[selectedLocation] = item.selectedLocation
+                    }[Posts.id]
                 }
-                else -> Posts.update { updateStatement ->
-                    if (item.ownerId != ownerId) throw ForbiddenException("Нет прав доступа")
-                    updateStatement[Posts.id] = item.id
-                    updateStatement[Posts.ownerId] = item.ownerId
-                    updateStatement[Posts.author] = item.author
-                    updateStatement[Posts.createdDate] = item.createdDate
-                    updateStatement[Posts.content] = item.content
-                    updateStatement[Posts.countLike] = item.countLike
-                    updateStatement[Posts.isLike] = item.isLike
-                    updateStatement[Posts.countRepost] = item.countRepost
-                    updateStatement[Posts.type] = item.type
-                    updateStatement[Posts.adsUrl] = item.adsUrl
-                    updateStatement[Posts.countViews] = item.countViews
-                    updateStatement[Posts.parentId] = item.parentId
-                    updateStatement[Posts.imageId] = item.imageId
-                    updateStatement[Posts.videoUrl] = item.videoUrl
-                    updateStatement[Posts.countComment] = item.countComment
-                    updateStatement[Posts.isCanCommented] = item.isCanCommented
-                    updateStatement[Posts.selectedLocation] = item.selectedLocation
+
+                else -> {
+                    postId = item.id
+                    Posts.update { updateStatement ->
+                        if (item.ownerId != ownerId) throw ForbiddenException("Нет прав доступа")
+                        updateStatement[id] = item.id
+                        updateStatement[Posts.ownerId] = item.ownerId
+                        updateStatement[author] = item.author
+                        updateStatement[createdDate] = item.createdDate
+                        updateStatement[content] = item.content
+                        updateStatement[countLike] = item.countLike
+                        updateStatement[isLike] = item.isLike
+                        updateStatement[countRepost] = item.countRepost
+                        updateStatement[type] = item.type
+                        updateStatement[adsUrl] = item.adsUrl
+                        updateStatement[countViews] = item.countViews
+                        updateStatement[parentId] = item.parentId
+                        updateStatement[imageId] = item.imageId
+                        updateStatement[videoUrl] = item.videoUrl
+                        updateStatement[countComment] = item.countComment
+                        updateStatement[isCanCommented] = item.isCanCommented
+                        updateStatement[selectedLocation] = item.selectedLocation
+                    }
                 }
             }
+
+            Posts.select {
+                Posts.id eq postId
+            }.single().toPost()
         }
-    }
 
 
     override suspend fun removeById(id: Long, ownerId: Long) {
@@ -77,48 +86,74 @@ class PostRepositoryImpl: PostRepository {
         }
     }
 
-    override suspend fun likeById(id: Long): PostModel? {
+    override suspend fun likeById(id: Long): PostModel? =
         dbQuery {
-            Posts.update {
+            val post = Posts.select {
+                Posts.id eq id
+            }.singleOrNull()?.toPost() ?: throw NotFoundException("Нет такого поста")
 
-            }
+            val likes = post.countLike.inc()
+
+            Posts.update(
+                where = {
+                    Posts.id eq id
+                },
+                body = { updateStatement ->
+                    updateStatement[countLike] = likes
+                }
+            )
+
+            post.copy(countLike = likes)
         }
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun dislikeById(id: Long): PostModel? {
+    override suspend fun dislikeById(id: Long): PostModel? =
         dbQuery {
+            val post = Posts.select {
+                Posts.id eq id
+            }.singleOrNull()?.toPost() ?: throw NotFoundException("Нет такого поста")
 
-            Posts.update {
-            }
+            val likes = post.countLike.dec()
+
+            Posts.update(
+                where = {
+                    Posts.id eq id
+                },
+                body = { updateStatement ->
+                    updateStatement[countLike] = likes
+                }
+            )
+
+            post.copy(countLike = likes)
         }
-        TODO("Not yet implemented")
-    }
 
-    override suspend fun repostById(id: Long): PostModel? {
-        val item = getById(id) ?: throw NotFoundException("Пост не найден")
+    override suspend fun repostById(id: Long): PostModel? =
         dbQuery {
-            Posts.insert { insertStatement ->
-                insertStatement[Posts.id] = item.id
-                insertStatement[Posts.ownerId] = item.ownerId
-                insertStatement[Posts.author] = item.author
-                insertStatement[Posts.createdDate] = item.createdDate
-                insertStatement[Posts.content] = item.content
-                insertStatement[Posts.countLike] = item.countLike
-                insertStatement[Posts.isLike] = item.isLike
-                insertStatement[Posts.countRepost] = item.countRepost
-                insertStatement[Posts.type] = item.type
-                insertStatement[Posts.adsUrl] = item.adsUrl
-                insertStatement[Posts.countViews] = item.countViews + 1L
-                insertStatement[Posts.parentId] = item.parentId
-                insertStatement[Posts.imageId] = item.imageId
-                insertStatement[Posts.videoUrl] = item.videoUrl
-                insertStatement[Posts.countComment] = item.countComment
-                insertStatement[Posts.isCanCommented] = item.isCanCommented
-                insertStatement[Posts.selectedLocation] = item.selectedLocation
-            }
-            Posts.select { Posts.id eq id }
+            val originalPost = Posts.select {
+                Posts.id eq id
+            }.singleOrNull()?.toPost() ?: throw NotFoundException("Нет такого поста")
+
+            val newId = Posts.insert { insertStatement ->
+                // TODO Может тут автором должен стать человек, который сделал репост?
+                insertStatement[ownerId] = originalPost.ownerId
+                insertStatement[author] = originalPost.author
+                insertStatement[createdDate] = originalPost.createdDate
+                insertStatement[content] = originalPost.content
+                insertStatement[countLike] = originalPost.countLike
+                insertStatement[isLike] = originalPost.isLike
+                insertStatement[countRepost] = originalPost.countRepost
+                insertStatement[type] = originalPost.type
+                insertStatement[adsUrl] = originalPost.adsUrl
+                insertStatement[countViews] = originalPost.countViews
+                insertStatement[parentId] = originalPost.id
+                insertStatement[imageId] = originalPost.imageId
+                insertStatement[videoUrl] = originalPost.videoUrl
+                insertStatement[countComment] = originalPost.countComment
+                insertStatement[isCanCommented] = originalPost.isCanCommented
+                insertStatement[selectedLocation] = originalPost.selectedLocation
+            }[Posts.id]
+
+            Posts.select {
+                Posts.id eq newId
+            }.single().toPost()
         }
-        TODO("Not yet implemented")
-    }
 }

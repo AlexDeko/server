@@ -45,7 +45,7 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                 ?: throw ConfigurationException("Upload dir is not specified"))
             bind<PasswordEncoder>() with eagerSingleton { BCryptPasswordEncoder() }
             bind<JWTTokenService>() with eagerSingleton { JWTTokenService() }
-            bind<PostRepository>() with eagerSingleton { PostRepositoryInMemoryWithMutexImpl() }
+            bind<PostRepository>() with eagerSingleton { PostRepositoryImpl() }
             bind<PostService>() with eagerSingleton { PostService(instance()) }
             bind<FileService>() with eagerSingleton { FileService(instance(tag = UPLOAD_DIR)) }
             bind<UserRepository>() with eagerSingleton { UserRepositoryImpl() }
