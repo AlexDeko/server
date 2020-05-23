@@ -12,6 +12,11 @@ class PostService(private val repo: PostRepository) {
         return repo.getAll().map { PostResponseDto.fromModel(it) }
     }
 
+    suspend fun getPage(id: Long, countPage: Int): List<PostResponseDto> {
+        return  repo.getAll().asSequence().map { PostResponseDto.fromModel(it) }
+            .filter { it.id < id }.take(countPage).toList()
+    }
+
     suspend fun getById(id: Long): PostResponseDto {
         val model = repo.getById(id) ?: throw NotFoundException()
         return PostResponseDto.fromModel(model)

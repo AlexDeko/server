@@ -57,6 +57,19 @@ class RoutingV1(
                             val response = postService.getAll()
                             call.respond(response)
                         }
+                        get("/posts/{id}/{count}") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val countPage = call.parameters["count"]?.toIntOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Int"
+                            )
+                            val response = postService.getPage(id, countPage)
+                            call.respond(response)
+                        }
+
                         get("/{id}") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
@@ -71,7 +84,7 @@ class RoutingV1(
                             call.respond(response)
                         }
 
-                        post("/{id}") {
+                        post("/{id}/likes") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
@@ -80,7 +93,7 @@ class RoutingV1(
                             call.respond(response)
                         }
 
-                        post("/{id}/likes") {
+                        post("/{id}/dislikes") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"

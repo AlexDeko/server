@@ -8,6 +8,7 @@ import io.ktor.server.testing.contentType
 import io.ktor.server.testing.handleRequest
 import io.ktor.server.testing.setBody
 import io.ktor.server.testing.withTestApplication
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.io.streams.asInput
@@ -18,6 +19,7 @@ import java.nio.file.Paths
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+@KtorExperimentalAPI
 class ApplicationTest {
     class AppPostgreSQLContainer : PostgreSQLContainer<AppPostgreSQLContainer>("postgres:latest")
 
@@ -32,7 +34,7 @@ class ApplicationTest {
 
     private val configure: Application.() -> Unit = {
         (environment.config as MapApplicationConfig).apply {
-            put("com.post.jwt.secret", "secret")
+           // put("com.post.jwt.secret", "secret")
             put("db.jdbcUrl",
                 "postgres://${postgresContainer.username}:${postgresContainer.password}@${postgresContainer.containerIpAddress}:${postgresContainer.getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT)}/${postgresContainer.databaseName}")
             put("server.upload.dir", uploadPath)
@@ -40,13 +42,6 @@ class ApplicationTest {
         }
         module()
     }
-
-//    private val configure: Application.() -> Unit = {
-//        (environment.config as MapApplicationConfig).apply {
-//            put("com.post.jwt.secret", "secret")
-//        }
-//        module()
-//    }
 
     @Test
     fun testUnauthorized() {
