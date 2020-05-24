@@ -13,10 +13,13 @@ class PostService(private val repo: PostRepository) {
     }
 
     suspend fun getPage(id: Long, countPage: Int): List<PostResponseDto> {
-        if(id == 0L) return repo.getAll().asSequence().map { PostResponseDto.fromModel(it) }
-            .take(countPage).toList()
-        return  repo.getAll().asSequence().map { PostResponseDto.fromModel(it) }
+        return repo.getAll().asSequence().map { PostResponseDto.fromModel(it) }
             .filter { it.id < id }.take(countPage).toList()
+    }
+
+    suspend fun getLastPage(countPage: Int): List<PostResponseDto> {
+        return repo.getAll().asSequence().map { PostResponseDto.fromModel(it) }
+            .take(countPage).toList()
     }
 
     suspend fun getById(id: Long): PostResponseDto {
