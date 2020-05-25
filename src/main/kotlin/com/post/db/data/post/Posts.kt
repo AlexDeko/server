@@ -8,7 +8,7 @@ object Posts : Table() {
     val ownerId: Column<Long> = long("owner_id")
     val author: Column<String> = varchar("author", 100)
     val createdDate: Column<Long> = long("created_date")
-    val content: Column<String?> = varchar("content_text", 100).nullable()
+    val content: Column<String> = varchar("content_text", 100)
     val countLike: Column<Long> = long("count_like")
     val isLike: Column<Boolean> = bool("is_like")
     val countRepost: Column<Long> = long("count_repost")
