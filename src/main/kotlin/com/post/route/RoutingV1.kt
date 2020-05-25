@@ -57,7 +57,7 @@ class RoutingV1(
                             val response = postService.getAll()
                             call.respond(response)
                         }
-                        get("/posts/{id}/{count}") {
+                        get("/{id}/{count}") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
@@ -70,7 +70,7 @@ class RoutingV1(
                             call.respond(response)
                         }
 
-                        get("/posts/last/{count}") {
+                        get("/last/{count}") {
                             val countPage = call.parameters["count"]?.toIntOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Int"
