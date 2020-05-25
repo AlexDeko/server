@@ -9,7 +9,7 @@ data class PostModel(
     val ownerId: Long,
     val author: String,
     val createdDate: Long = (System.currentTimeMillis() / 1000L),
-    val content: String? = null,
+    val content: String = "",
     val countLike: Long = 0,
     val isLike: Boolean = false,
     val countRepost: Long = 0,
