@@ -16,7 +16,7 @@ object Posts : Table() {
     val adsUrl: Column<String?> = varchar("ads_url", 100).nullable()
     val countViews: Column<Long> = long("count_views")
     val parentId: Column<Long?> = long("parent_id").nullable()
-    val imageId: Column<Long?> = long("image_id").nullable()
+    val imageId: Column<String?> = varchar("image_id", 100).nullable()
     val videoUrl: Column<String?> = varchar("video_url", 100).nullable()
     val countComment: Column<Long> = long("count_comment")
     val isCanCommented: Column<Boolean> = bool("is_can_commented")

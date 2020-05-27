@@ -11,7 +11,7 @@ create TABLE POSTS (
     ads_url varchar(100),
     count_views bigint,
     parent_id bigint,
-    image_id bigint,
+    image_id varchar(100),
     video_url varchar(100),
     count_comment bigint,
     is_can_commented boolean,
