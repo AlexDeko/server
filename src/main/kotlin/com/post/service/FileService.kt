@@ -32,37 +32,39 @@ class FileService(private val uploadPath: String) {
             when (part) {
                 is PartData.FileItem -> {
                     if (part.name == "file") {
-                        BufferedInputStream(part.streamProvider()).use {
+                        BufferedInputStream(part.streamProvider()).use { buffer ->
                             val parser = AutoDetectParser()
                             val detector = parser.detector
                             val md = Metadata()
                             val mediaType = withContext(Dispatchers.IO) {
-                                detector.detect(it, md)
+                                detector.detect(buffer, md)
                             }
                             if (mediaType.type != "image") {
-                                throw UnsupportedMediaTypeException(part.contentType ?: ContentType.Any)
+                                throw UnsupportedMediaTypeException(
+                                    part.contentType ?: ContentType.Any
+                                )
                             }
-                        }
-                        val ext = when (part.contentType) {
-                            ContentType.Image.JPEG -> "jpg"
-                            ContentType.Image.PNG -> "png"
-                            else -> throw UnsupportedMediaTypeException(part.contentType!!)
-                        }
-                        val name = "${UUID.randomUUID()}.$ext"
-                        val path = Paths.get(uploadPath, name)
-                        part.streamProvider().use {
+
+                            val ext = when (part.contentType) {
+                                ContentType.Image.JPEG -> "jpg"
+                                ContentType.Image.PNG -> "png"
+                                else -> throw UnsupportedMediaTypeException(part.contentType!!)
+                            }
+                            val name = "${UUID.randomUUID()}.$ext"
+                            val path = Paths.get(uploadPath, name)
+
                             withContext(Dispatchers.IO) {
-                                Files.copy(it, path)
+                                Files.copy(buffer, path)
                             }
+
+                            part.dispose()
+                            response = MediaResponseDto(name, MediaType.IMAGE)
+                            return@forEachPart
                         }
-                        part.dispose()
-                        response = MediaResponseDto(name, MediaType.IMAGE)
-                        return@forEachPart
                     }
+                    part.dispose()
                 }
             }
-
-            part.dispose()
         }
         @Suppress("EXPERIMENTAL_API_USAGE")
         return response ?: throw BadRequestException("No file field in request")
