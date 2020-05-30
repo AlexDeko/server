@@ -15,6 +15,7 @@ import com.post.exception.ConfigurationException
 import com.post.repository.*
 import com.post.route.RoutingV1
 import com.post.service.*
+import kotlinx.coroutines.runBlocking
 import java.net.URI
 
 class KodeinBuilder(private val environment: ApplicationEnvironment) {
@@ -60,6 +61,22 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             }
             bind<BasicAuth>() with eagerSingleton { BasicAuth(instance(), instance()) }
             bind<JwtAuth>() with eagerSingleton { JwtAuth(instance(), instance()) }
+            constant(tag = "fcm-password") with (environment.config.propertyOrNull("server.fcm.password")?.getString()
+                ?: throw ConfigurationException("FCM Password is not specified"))
+            constant(tag = "fcm-salt") with (environment.config.propertyOrNull("server.fcm.salt")?.getString()
+                ?: throw ConfigurationException("FCM Salt is not specified"))
+            constant(tag = "fcm-db-url") with (environment.config.propertyOrNull("server.fcm.db-url")?.getString()
+                ?: throw ConfigurationException("FCM DB Url is not specified"))
+            constant(tag = "fcm-path") with (environment.config.propertyOrNull("server.fcm.path")?.getString()
+                ?: throw ConfigurationException("FCM JSON Path is not specified"))
+            bind<FCMService>() with eagerSingleton {
+                FCMService(
+                    instance(tag = "fcm-db-url"),
+                    instance(tag = "fcm-password"),
+                    instance(tag = "fcm-salt"),
+                    instance(tag = "fcm-path")
+                )
+            }
         }
     }
 }
