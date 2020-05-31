@@ -17,6 +17,7 @@ import com.post.dto.user.UserRegisterRequestDto
 import com.post.model.toDto
 import com.post.route.me
 import com.post.service.*
+import io.ktor.request.receiveText
 import org.kodein.di.generic.instance
 import org.kodein.di.ktor.kodein
 
@@ -65,19 +66,21 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
-                            val countPage = call.parameters["count"]?.toIntOrNull() ?: throw ParameterConversionException(
-                                "id",
-                                "Int"
-                            )
+                            val countPage =
+                                call.parameters["count"]?.toIntOrNull() ?: throw ParameterConversionException(
+                                    "id",
+                                    "Int"
+                                )
                             val response = postService.getPage(id, countPage)
                             call.respond(response)
                         }
 
                         get("/last/{count}") {
-                            val countPage = call.parameters["count"]?.toIntOrNull() ?: throw ParameterConversionException(
-                                "id",
-                                "Int"
-                            )
+                            val countPage =
+                                call.parameters["count"]?.toIntOrNull() ?: throw ParameterConversionException(
+                                    "id",
+                                    "Int"
+                                )
                             val response = postService.getLastPage(countPage)
                             call.respond(response)
                         }
@@ -93,8 +96,10 @@ class RoutingV1(
 
                         post("/save") {
                             val input = call.receive<PostRequestDto>()
+                            val tokenFirebase = call.receiveText()
                             val response = postService.save(input, me!!.id)
-                            firebaseService.send(response.id,"", CREATE_POST_MESSAGE)
+                            if (tokenFirebase.isNotEmpty())
+                                firebaseService.send(response.id, "", CREATE_POST_MESSAGE)
                             call.respond(response)
                         }
 
@@ -109,8 +114,9 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
+                            val tokenFirebase = call.receiveText()
                             val response = postService.likedById(id)
-                            firebaseService.send(id, "", LIKE_MESSAGE)
+                            if (tokenFirebase.isNotEmpty()) firebaseService.send(id, "", LIKE_MESSAGE)
                             call.respond(response)
                         }
 
