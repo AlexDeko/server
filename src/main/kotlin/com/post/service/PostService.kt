@@ -5,6 +5,8 @@ import com.post.dto.PostRequestDto
 import com.post.dto.PostResponseDto
 import com.post.model.PostModel
 import com.post.repository.PostRepository
+import org.kodein.di.generic.instance
+import org.kodein.di.ktor.kodein
 
 class PostService(private val repo: PostRepository) {
 
@@ -40,7 +42,7 @@ class PostService(private val repo: PostRepository) {
             countRepost = input.countRepost,
             type = input.type,
             adsUrl = input.adsUrl,
-            countViews = input.countViews + 1,
+            countViews = input.countViews,
             parentId = input.parentId,
             imageId = input.imageId,
             videoUrl = input.videoUrl,
@@ -49,6 +51,30 @@ class PostService(private val repo: PostRepository) {
             selectedLocation = input.selectedLocation
         )
         return PostResponseDto.fromModel(repo.save(model, ownerId))
+    }
+
+    suspend fun update(input: PostRequestDto, ownerId: Long): PostResponseDto {
+
+        val model = PostModel(
+            id = input.id,
+            ownerId = input.ownerId,
+            author = input.author,
+            createdDate = input.createdDate,
+            content = input.content,
+            countLike = input.countLike,
+            isLike = input.isLike,
+            countRepost = input.countRepost,
+            type = input.type,
+            adsUrl = input.adsUrl,
+            countViews = input.countViews,
+            parentId = input.parentId,
+            imageId = input.imageId,
+            videoUrl = input.videoUrl,
+            countComment = input.countComment,
+            isCanCommented = input.isCanCommented,
+            selectedLocation = input.selectedLocation
+        )
+        return PostResponseDto.fromModel(repo.update(model, ownerId))
     }
 
     suspend fun removeById(id: Long, ownerId: Long) {

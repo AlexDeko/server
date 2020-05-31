@@ -16,6 +16,9 @@ import java.io.ByteArrayInputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 
+const val LIKE_MESSAGE = "NewLike"
+const val CREATE_POST_MESSAGE = "NewPost"
+
 class FCMService(private val dbUrl: String, private val password: String, private val salt: String, private val path: String) {
     init {
         val decryptor = Encryptors.stronger(password, Hex.encodeHexString(salt.toByteArray(Charsets.UTF_8)))
@@ -42,4 +45,5 @@ class FCMService(private val dbUrl: String, private val password: String, privat
             e.printStackTrace()
         }
     }
+
 }

@@ -27,55 +27,55 @@ class PostRepositoryImpl : PostRepository {
     override suspend fun save(item: PostModel, ownerId: Long): PostModel =
         dbQuery {
             val postId: Long
-            when (item.id) {
-                0L -> {
-                    postId = Posts.insert { insertStatement ->
-                        insertStatement[Posts.ownerId] = ownerId
-                        insertStatement[author] = item.author
-                        insertStatement[createdDate] = item.createdDate
-                        insertStatement[content] = item.content
-                        insertStatement[countLike] = item.countLike
-                        insertStatement[isLike] = item.isLike
-                        insertStatement[countRepost] = item.countRepost
-                        insertStatement[type] = item.type
-                        insertStatement[adsUrl] = item.adsUrl
-                        insertStatement[countViews] = item.countViews + 1L
-                        insertStatement[parentId] = item.parentId
-                        insertStatement[imageId] = item.imageId
-                        insertStatement[videoUrl] = item.videoUrl
-                        insertStatement[countComment] = item.countComment
-                        insertStatement[isCanCommented] = item.isCanCommented
-                        insertStatement[selectedLocation] = item.selectedLocation
-                    }[Posts.id]
-                }
-
-                else -> {
-                    postId = item.id
-                    Posts.update { updateStatement ->
-                        if (item.ownerId != ownerId) throw ForbiddenException("Нет прав доступа")
-                        updateStatement[id] = item.id
-                        updateStatement[Posts.ownerId] = item.ownerId
-                        updateStatement[author] = item.author
-                        updateStatement[createdDate] = item.createdDate
-                        updateStatement[content] = item.content
-                        updateStatement[countLike] = item.countLike
-                        updateStatement[isLike] = item.isLike
-                        updateStatement[countRepost] = item.countRepost
-                        updateStatement[type] = item.type
-                        updateStatement[adsUrl] = item.adsUrl
-                        updateStatement[countViews] = item.countViews
-                        updateStatement[parentId] = item.parentId
-                        updateStatement[imageId] = item.imageId
-                        updateStatement[videoUrl] = item.videoUrl
-                        updateStatement[countComment] = item.countComment
-                        updateStatement[isCanCommented] = item.isCanCommented
-                        updateStatement[selectedLocation] = item.selectedLocation
-                    }
-                }
-            }
+            postId = Posts.insert { insertStatement ->
+                insertStatement[Posts.ownerId] = ownerId
+                insertStatement[author] = item.author
+                insertStatement[createdDate] = item.createdDate
+                insertStatement[content] = item.content
+                insertStatement[countLike] = item.countLike
+                insertStatement[isLike] = item.isLike
+                insertStatement[countRepost] = item.countRepost
+                insertStatement[type] = item.type
+                insertStatement[adsUrl] = item.adsUrl
+                insertStatement[countViews] = item.countViews + 1L
+                insertStatement[parentId] = item.parentId
+                insertStatement[imageId] = item.imageId
+                insertStatement[videoUrl] = item.videoUrl
+                insertStatement[countComment] = item.countComment
+                insertStatement[isCanCommented] = item.isCanCommented
+                insertStatement[selectedLocation] = item.selectedLocation
+            }[Posts.id]
 
             Posts.select {
                 Posts.id eq postId
+            }.single().toPost()
+        }
+
+    override suspend fun update(item: PostModel, ownerId: Long): PostModel =
+        dbQuery {
+            Posts.update { updateStatement ->
+                if (item.ownerId != ownerId) throw ForbiddenException("Нет прав доступа")
+                updateStatement[id] = item.id
+                updateStatement[Posts.ownerId] = item.ownerId
+                updateStatement[author] = item.author
+                updateStatement[createdDate] = item.createdDate
+                updateStatement[content] = item.content
+                updateStatement[countLike] = item.countLike
+                updateStatement[isLike] = item.isLike
+                updateStatement[countRepost] = item.countRepost
+                updateStatement[type] = item.type
+                updateStatement[adsUrl] = item.adsUrl
+                updateStatement[countViews] = item.countViews
+                updateStatement[parentId] = item.parentId
+                updateStatement[imageId] = item.imageId
+                updateStatement[videoUrl] = item.videoUrl
+                updateStatement[countComment] = item.countComment
+                updateStatement[isCanCommented] = item.isCanCommented
+                updateStatement[selectedLocation] = item.selectedLocation
+            }
+
+            Posts.select {
+                Posts.id eq item.id
             }.single().toPost()
         }
 

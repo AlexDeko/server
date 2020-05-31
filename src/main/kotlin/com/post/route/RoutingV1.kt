@@ -14,16 +14,19 @@ import com.post.auth.JwtAuth
 import com.post.dto.AuthenticationRequestDto
 import com.post.dto.PostRequestDto
 import com.post.dto.user.UserRegisterRequestDto
-import com.post.exception.ForbiddenException
 import com.post.model.toDto
 import com.post.route.me
 import com.post.service.*
+import org.kodein.di.generic.instance
+import org.kodein.di.ktor.kodein
+
 
 class RoutingV1(
     private val staticPath: String,
     private val postService: PostService,
     private val fileService: FileService,
-    private val userService: UserService
+    private val userService: UserService,
+    private val firebaseService: FCMService
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
@@ -87,9 +90,17 @@ class RoutingV1(
                             val response = postService.getById(id)
                             call.respond(response)
                         }
-                        post {
+
+                        post("/save") {
                             val input = call.receive<PostRequestDto>()
                             val response = postService.save(input, me!!.id)
+                            firebaseService.send(response.id,"", CREATE_POST_MESSAGE)
+                            call.respond(response)
+                        }
+
+                        post("/update") {
+                            val input = call.receive<PostRequestDto>()
+                            val response = postService.update(input, me!!.id)
                             call.respond(response)
                         }
 
@@ -99,6 +110,7 @@ class RoutingV1(
                                 "Long"
                             )
                             val response = postService.likedById(id)
+                            firebaseService.send(id, "", LIKE_MESSAGE)
                             call.respond(response)
                         }
 

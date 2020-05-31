@@ -22,6 +22,10 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
 
     companion object {
         private const val UPLOAD_DIR = "upload-dir"
+        private const val FCM_DB_URL = "fcm-db-url"
+        private const val FCM_PASSWORD = "fcm-password"
+        private const val FCM_SALT = "fcm-salt"
+        private const val FCM_PATH = "fcm-path"
     }
 
     @Suppress("EXPERIMENTAL_API_USAGE")
@@ -52,9 +56,27 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             bind<FileService>() with eagerSingleton { FileService(instance(tag = UPLOAD_DIR)) }
             bind<UserRepository>() with eagerSingleton { UserRepositoryImpl() }
             bind<UserService>() with eagerSingleton { UserService(instance(), instance(), instance()) }
+            constant(tag = FCM_DB_URL) with (environment.config.propertyOrNull("server.fcm.db-url")?.getString()
+                ?: throw ConfigurationException("FCM DB Url is not specified"))
+            constant(tag = FCM_PASSWORD) with (environment.config.propertyOrNull("server.fcm.password")?.getString()
+                ?: throw ConfigurationException("FCM Password is not specified"))
+            constant(tag = FCM_SALT) with (environment.config.propertyOrNull("server.fcm.salt")?.getString()
+                ?: throw ConfigurationException("FCM Salt is not specified"))
+            constant(tag = FCM_PATH) with (environment.config.propertyOrNull("server.fcm.path")?.getString()
+                ?: throw ConfigurationException("FCM JSON Path is not specified"))
+            bind<FCMService>() with eagerSingleton {
+                FCMService(
+                    instance(tag = FCM_DB_URL),
+                    instance(tag = FCM_PASSWORD),
+                    instance(tag = FCM_SALT),
+                    instance(tag = FCM_PATH)
+                )
+            }
+
             bind<RoutingV1>() with eagerSingleton {
                 RoutingV1(
                     instance(tag = UPLOAD_DIR),
+                    instance(),
                     instance(),
                     instance(),
                     instance()
@@ -62,23 +84,6 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             }
             bind<BasicAuth>() with eagerSingleton { BasicAuth(instance(), instance()) }
             bind<JwtAuth>() with eagerSingleton { JwtAuth(instance(), instance()) }
-
-            constant(tag = "fcm-db-url") with (environment.config.propertyOrNull("server.fcm.db-url")?.getString()
-                ?: throw ConfigurationException("FCM DB Url is not specified"))
-            constant(tag = "fcm-password") with (environment.config.propertyOrNull("server.fcm.password")?.getString()
-                ?: throw ConfigurationException("FCM Password is not specified"))
-            constant(tag = "fcm-salt") with (environment.config.propertyOrNull("server.fcm.salt")?.getString()
-                ?: throw ConfigurationException("FCM Salt is not specified"))
-            constant(tag = "fcm-path") with (environment.config.propertyOrNull("server.fcm.path")?.getString()
-                ?: throw ConfigurationException("FCM JSON Path is not specified"))
-            bind<FCMService>() with eagerSingleton {
-                FCMService(
-                    instance(tag = "fcm-db-url"),
-                    instance(tag = "fcm-password"),
-                    instance(tag = "fcm-salt"),
-                    instance(tag = "fcm-path")
-                )
-            }
         }
     }
 }
