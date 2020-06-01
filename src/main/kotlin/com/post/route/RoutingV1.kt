@@ -99,7 +99,7 @@ class RoutingV1(
                             val tokenFirebase = call.receiveText()
                             val response = postService.save(input, me!!.id)
                             if (tokenFirebase.isNotEmpty())
-                                firebaseService.send(response.id, "", CREATE_POST_MESSAGE)
+                                firebaseService.send(response.id, tokenFirebase, CREATE_POST_MESSAGE)
                             call.respond(response)
                         }
 
@@ -116,7 +116,7 @@ class RoutingV1(
                             )
                             val tokenFirebase = call.receiveText()
                             val response = postService.likedById(id)
-                            if (tokenFirebase.isNotEmpty()) firebaseService.send(id, "", LIKE_MESSAGE)
+                            if (tokenFirebase.isNotEmpty()) firebaseService.send(id, tokenFirebase, LIKE_MESSAGE)
                             call.respond(response)
                         }
 
