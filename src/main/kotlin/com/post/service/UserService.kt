@@ -75,4 +75,11 @@ class UserService(
             val token = tokenService.generate(model.id)
             AuthenticationResponseDto(token)
         }
+
+    suspend fun getTokenFirebaseById(idPost: Long): String? {
+        val user = getById(idPost)
+
+
+        return null
+    }
 }

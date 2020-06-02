@@ -6,7 +6,7 @@ import com.post.db.dbQuery
 import com.post.exception.ForbiddenException
 import com.post.exception.NotFoundException
 import com.post.model.PostModel
-import com.post.model.PostTypeEnum
+import com.post.model.PostType
 import org.jetbrains.exposed.sql.*
 
 class PostRepositoryImpl : PostRepository {
@@ -127,7 +127,7 @@ class PostRepositoryImpl : PostRepository {
             post.copy(countLike = likes)
         }
 
-    override suspend fun repostById(id: Long, ownerId: Long): PostModel? =
+    override suspend fun repostById(id: Long, ownerId: Long, time: Long): PostModel? =
         dbQuery {
             val originalPost = Posts.select {
                 Posts.id eq id
@@ -136,12 +136,12 @@ class PostRepositoryImpl : PostRepository {
             val newId = Posts.insert { insertStatement ->
                 insertStatement[Posts.ownerId] = ownerId
                 insertStatement[author] = originalPost.author
-                insertStatement[createdDate] = originalPost.createdDate
+                insertStatement[createdDate] = time
                 insertStatement[content] = originalPost.content
                 insertStatement[countLike] = originalPost.countLike
                 insertStatement[isLike] = originalPost.isLike
                 insertStatement[countRepost] = originalPost.countRepost
-                insertStatement[type] = PostTypeEnum.REPOST.name
+                insertStatement[type] = PostType.REPOST.name
                 insertStatement[adsUrl] = originalPost.adsUrl
                 insertStatement[countViews] = originalPost.countViews
                 insertStatement[parentId] = originalPost.id

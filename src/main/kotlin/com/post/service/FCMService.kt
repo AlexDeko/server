@@ -45,5 +45,4 @@ class FCMService(private val dbUrl: String, private val password: String, privat
             e.printStackTrace()
         }
     }
-
 }

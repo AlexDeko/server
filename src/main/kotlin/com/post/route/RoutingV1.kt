@@ -27,7 +27,8 @@ class RoutingV1(
     private val postService: PostService,
     private val fileService: FileService,
     private val userService: UserService,
-    private val firebaseService: FCMService
+    private val firebaseService: FCMService,
+    private val reactionService: ReactionService
 ) {
     fun setup(configuration: Routing) {
         with(configuration) {
@@ -120,7 +121,29 @@ class RoutingV1(
                             call.respond(response)
                         }
 
+                        post("/{id}/approve") {
+                            //toDO
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val tokenFirebase = call.receiveText()
+                            val response = postService.likedById(id)
+                            if (tokenFirebase.isNotEmpty()) firebaseService.send(id, tokenFirebase, LIKE_MESSAGE)
+                            call.respond(response)
+                        }
+
                         post("/{id}/dislikes") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val response = postService.dislikeById(id)
+                            call.respond(response)
+                        }
+
+                        post("/{id}/not_approve") {
+                            //toDO
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
@@ -146,6 +169,7 @@ class RoutingV1(
                             postService.removeById(id, me!!.id)
                             call.respond(HttpStatusCode.NoContent)
                         }
+
                     }
                     route("/media") {
                         post {

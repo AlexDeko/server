@@ -7,6 +7,8 @@ import com.post.model.PostModel
 import com.post.repository.PostRepository
 import org.kodein.di.generic.instance
 import org.kodein.di.ktor.kodein
+import java.time.LocalDateTime
+import java.util.*
 
 class PostService(private val repo: PostRepository) {
 
@@ -31,11 +33,12 @@ class PostService(private val repo: PostRepository) {
 
     suspend fun save(input: PostRequestDto, ownerId: Long): PostResponseDto {
 
+        val time = Date().time
         val model = PostModel(
             id = input.id,
             ownerId = input.ownerId,
             author = input.author,
-            createdDate = input.createdDate,
+            createdDate = time,
             content = input.content,
             countLike = input.countLike,
             isLike = input.isLike,
@@ -54,12 +57,12 @@ class PostService(private val repo: PostRepository) {
     }
 
     suspend fun update(input: PostRequestDto, ownerId: Long): PostResponseDto {
-
+        val time = Date().time
         val model = PostModel(
             id = input.id,
             ownerId = input.ownerId,
             author = input.author,
-            createdDate = input.createdDate,
+            createdDate = time,
             content = input.content,
             countLike = input.countLike,
             isLike = input.isLike,
@@ -87,7 +90,8 @@ class PostService(private val repo: PostRepository) {
     }
 
     suspend fun repostById(id: Long, ownerId: Long): PostResponseDto {
-        val model = repo.repostById(id, ownerId) ?: throw NotFoundException()
+        val time = Date().time
+        val model = repo.repostById(id, ownerId, time) ?: throw NotFoundException()
         return PostResponseDto.fromModel(model)
     }
 

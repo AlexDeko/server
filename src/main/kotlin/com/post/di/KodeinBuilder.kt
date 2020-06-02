@@ -2,10 +2,6 @@ package com.post.di
 
 import io.ktor.application.ApplicationEnvironment
 import org.kodein.di.Kodein
-import org.kodein.di.generic.bind
-import org.kodein.di.generic.eagerSingleton
-import org.kodein.di.generic.instance
-import org.kodein.di.generic.with
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 import com.post.auth.BasicAuth
@@ -16,6 +12,7 @@ import com.post.repository.*
 import com.post.route.RoutingV1
 import com.post.service.*
 import kotlinx.coroutines.runBlocking
+import org.kodein.di.generic.*
 import java.net.URI
 
 class KodeinBuilder(private val environment: ApplicationEnvironment) {
@@ -33,7 +30,6 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
         with(builder) {
             bind<DatabaseFactory>() with eagerSingleton {
                 val dbUri = URI(environment.config.property("db.jdbcUrl").getString())
-
                 val username: String = dbUri.userInfo.split(":")[0]
                 val password: String = dbUri.userInfo.split(":")[1]
                 val dbUrl = ("jdbc:postgresql://${dbUri.host}:${dbUri.port}${dbUri.path}")
@@ -56,6 +52,8 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             bind<FileService>() with eagerSingleton { FileService(instance(tag = UPLOAD_DIR)) }
             bind<UserRepository>() with eagerSingleton { UserRepositoryImpl() }
             bind<UserService>() with eagerSingleton { UserService(instance(), instance(), instance()) }
+            bind<ReactionRepository>() with eagerSingleton { ReactionRepositoryImpl() }
+            bind<ReactionService>() with singleton { ReactionService(instance()) }
             constant(tag = FCM_DB_URL) with (environment.config.propertyOrNull("server.fcm.db-url")?.getString()
                 ?: throw ConfigurationException("FCM DB Url is not specified"))
             constant(tag = FCM_PASSWORD) with (environment.config.propertyOrNull("server.fcm.password")?.getString()
@@ -76,6 +74,7 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
             bind<RoutingV1>() with eagerSingleton {
                 RoutingV1(
                     instance(tag = UPLOAD_DIR),
+                    instance(),
                     instance(),
                     instance(),
                     instance(),
