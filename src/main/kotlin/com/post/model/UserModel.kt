@@ -9,13 +9,13 @@ data class UserModel(
     val id: Long = 0,
     val username: String,
     val password: String,
-    val tokenFirebase: String? = null,
     val imageId: Long? = null,
     val badge: UserBadge? = null,
     val notApprove: Long = 0,
     val approve: Long = 0,
-    val onlyReads: Boolean = false
-): Principal
+    val onlyReads: Boolean = false,
+    val firebaseId: String? = null
+) : Principal
 
 fun UserModel.toDto() = UserResponseDto(
     id = id,
@@ -24,7 +24,8 @@ fun UserModel.toDto() = UserResponseDto(
     badge = badge,
     notApprove = notApprove,
     approve = approve,
-    onlyReads = onlyReads
+    onlyReads = onlyReads,
+    firebaseId = firebaseId
 )
 
 fun getBadgeByString(badge: String): UserBadge? {

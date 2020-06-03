@@ -76,10 +76,16 @@ class UserService(
             AuthenticationResponseDto(token)
         }
 
-    suspend fun getTokenFirebaseById(idPost: Long): String? {
-        val user = getById(idPost)
+    suspend fun update(userDto: UserResponseDto) {
+        repo.update(userDto.id, userDto)
+    }
 
+    suspend fun getTokenFirebaseById(id: Long): String? {
+        val user = getById(id)
+        if (user.firebaseId!!.isNotEmpty()) return user.firebaseId
 
         return null
     }
+
+
 }

@@ -11,5 +11,6 @@ data class UserResponseDto(
     val badge: UserBadge? = null,
     val notApprove: Long = 0,
     val approve: Long = 0,
-    val onlyReads: Boolean = false
+    val onlyReads: Boolean = false,
+    val firebaseId: String? = null
 )

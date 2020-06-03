@@ -9,10 +9,10 @@ fun ResultRow.toUser() = UserModel(
     username = this[Users.username],
     id = this[Users.id],
     password = this[Users.password],
-    tokenFirebase = this[Users.token_firebase],
     imageId = this[Users.image_id],
-    badge = getBadgeByString(this[Users.badge]),
+    badge = getBadgeByString(this[Users.badge].orEmpty()),
     notApprove = this[Users.not_approve],
     approve = this[Users.approve],
-    onlyReads = this[Users.only_reads]
+    onlyReads = this[Users.only_reads],
+    firebaseId = this[Users.firebase_id]
 )

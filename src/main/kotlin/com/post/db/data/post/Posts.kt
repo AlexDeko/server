@@ -2,6 +2,7 @@ package com.post.db.data.post
 
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.max
 
 object Posts : Table() {
     val id: Column<Long> = long("id").autoIncrement().primaryKey()

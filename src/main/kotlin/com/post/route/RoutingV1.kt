@@ -14,12 +14,10 @@ import com.post.auth.JwtAuth
 import com.post.dto.AuthenticationRequestDto
 import com.post.dto.PostRequestDto
 import com.post.dto.user.UserRegisterRequestDto
+import com.post.dto.user.UserResponseDto
 import com.post.model.toDto
-import com.post.route.me
 import com.post.service.*
 import io.ktor.request.receiveText
-import org.kodein.di.generic.instance
-import org.kodein.di.ktor.kodein
 
 
 class RoutingV1(
@@ -97,10 +95,15 @@ class RoutingV1(
 
                         post("/save") {
                             val input = call.receive<PostRequestDto>()
-                            val tokenFirebase = call.receiveText()
+                            val token = call.receiveText()
                             val response = postService.save(input, me!!.id)
-                            if (tokenFirebase.isNotEmpty())
-                                firebaseService.send(response.id, tokenFirebase, CREATE_POST_MESSAGE)
+                            val user = userService.getById(response.ownerId)
+                            userService.update(userDto = user.copy(firebaseId = token))
+                            if (user.firebaseId!!.isNotEmpty()) firebaseService.send(
+                                response.id,
+                                user.firebaseId,
+                                CREATE_POST_MESSAGE
+                            )
                             call.respond(response)
                         }
 
@@ -115,9 +118,9 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
-                            val tokenFirebase = call.receiveText()
                             val response = postService.likedById(id)
-                            if (tokenFirebase.isNotEmpty()) firebaseService.send(id, tokenFirebase, LIKE_MESSAGE)
+                            val user = userService.getById(response.ownerId)
+                            if (user.firebaseId!!.isNotEmpty()) firebaseService.send(id, user.firebaseId, LIKE_MESSAGE)
                             call.respond(response)
                         }
 
@@ -171,6 +174,14 @@ class RoutingV1(
                         }
 
                     }
+
+                    route("/user") {
+                        post("/update") {
+                            val user = call.receive<UserResponseDto>()
+                            userService.update(user)
+                        }
+                    }
+
                     route("/media") {
                         post {
                             val multipart = call.receiveMultipart()

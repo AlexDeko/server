@@ -22,4 +22,5 @@ data class PostModel(
     val countComment: Long = 0,
     val isCanCommented: Boolean = true,
     val selectedLocation: String? = null
-    )
+)
+
