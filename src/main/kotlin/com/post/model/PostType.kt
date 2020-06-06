@@ -5,8 +5,5 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class PostType {
     POST,
-    REPOST,
-    ADS,
-    VIDEO,
-    EVENT
+    REPOST
 }

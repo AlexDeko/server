@@ -13,5 +13,5 @@ object Users : Table() {
     val not_approve: Column<Long> = long("not_approve")
     val approve: Column<Long> = long("approve")
     val only_reads: Column<Boolean> = bool("only_reads")
-    val firebase_id: Column<String?> = Posts.varchar("token_firebase", Int.MAX_VALUE).nullable()
+    val firebase_id: Column<String?> = Posts.varchar("token_firebase", 1000).nullable()
 }

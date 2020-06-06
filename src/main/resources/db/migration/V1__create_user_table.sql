@@ -7,5 +7,5 @@ create TABLE USERS (
     not_approve bigint,
     approve bigint,
     only_reads boolean,
-    token_firebase varchar
+    token_firebase varchar(1000)
 )

@@ -6,8 +6,8 @@ import org.jetbrains.exposed.sql.ResultRow
 
 
 fun ResultRow.toUser() = UserModel(
-    username = this[Users.username],
     id = this[Users.id],
+    username = this[Users.username],
     password = this[Users.password],
     imageId = this[Users.image_id],
     badge = getBadgeByString(this[Users.badge].orEmpty()),

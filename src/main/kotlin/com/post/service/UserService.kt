@@ -58,7 +58,7 @@ class UserService(
     }
 
     suspend fun register(username: String, password: String): AuthenticationResponseDto =
-        mutex.withLock {
+         mutex.withLock {
             if (repo.getByUsername(username) != null) {
                 throw UserExistsException("User exists!")
             }

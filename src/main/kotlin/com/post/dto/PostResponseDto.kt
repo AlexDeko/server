@@ -3,13 +3,14 @@ package com.post.dto
 import com.post.model.PostModel
 import com.post.model.PostType
 import kotlinx.serialization.Serializable
+import java.util.*
 
 @Serializable
 data class PostResponseDto(
     val id: Long,
     val ownerId: Long,
     val author: String,
-    val createdDate: Long = (System.currentTimeMillis() / 1000L),
+    val createdDate: Long = Date().time,
     val content: String = "",
     val countLike: Long = 0,
     val isLike: Boolean = false,
