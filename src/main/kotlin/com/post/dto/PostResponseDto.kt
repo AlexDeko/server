@@ -12,18 +12,16 @@ data class PostResponseDto(
     val author: String,
     val createdDate: Long = Date().time,
     val content: String = "",
-    val countLike: Long = 0,
-    val isLike: Boolean = false,
+    val isApprove: Boolean = false,
+    val countApprove: Long = 0,
+    val isNotApprove: Boolean = false,
+    val countNotApprove: Long = 0,
     val countRepost: Long = 0,
-    val type: String = PostType.POST.name,
-    val adsUrl: String? = null,
+    val type: PostType = PostType.POST,
+    val urlLink: String? = null,
     val countViews: Long = 0,
     val parentId: Long? = null,
-    val imageId: String? = null,
-    val videoUrl: String? = null,
-    val countComment: Long = 0,
-    val isCanCommented: Boolean = true,
-    val selectedLocation: String? = null
+    val imageId: String?= null
 ) {
     companion object {
         fun fromModel(model: PostModel) = PostResponseDto(
@@ -32,18 +30,15 @@ data class PostResponseDto(
             author = model.author,
             createdDate = model.createdDate,
             content = model.content,
-            countLike = model.countLike,
-            isLike = model.isLike,
+            isApprove = model.isApprove,
+            countApprove = model.countApprove,
+            isNotApprove = model.isNotApprove,
+            countNotApprove = model.countNotApprove,
             countRepost = model.countRepost,
             type = model.type,
-            adsUrl = model.adsUrl,
             countViews = model.countViews,
             parentId = model.parentId,
-            imageId = model.imageId,
-            videoUrl = model.videoUrl,
-            countComment = model.countComment,
-            isCanCommented = model.isCanCommented,
-            selectedLocation = model.selectedLocation
+            imageId = model.imageId
         )
     }
 }

@@ -118,40 +118,38 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
-                            val response = postService.likedById(id)
+                            val response = postService.approveById(id)
                             val user = userService.getById(response.ownerId)
-                            if (user.firebaseId!!.isNotEmpty()) firebaseService.send(id, user.firebaseId, LIKE_MESSAGE)
+                            if (!user.firebaseId.isNullOrEmpty()) firebaseService.send(id, user.firebaseId, LIKE_MESSAGE)
                             call.respond(response)
                         }
 
-                        post("/{id}/approve") {
-                            //toDO
+                        post("/{id}/approves") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
                             )
-                            val tokenFirebase = call.receiveText()
-                            val response = postService.likedById(id)
-                            if (tokenFirebase.isNotEmpty()) firebaseService.send(id, tokenFirebase, LIKE_MESSAGE)
+                            val response = postService.approveById(id)
+                            val user = userService.getById(response.ownerId)
+                            if (!user.firebaseId.isNullOrEmpty()) firebaseService.send(id, user.firebaseId, LIKE_MESSAGE)
                             call.respond(response)
                         }
 
-                        post("/{id}/dislikes") {
+                        post("/{id}/not_approves") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
                             )
-                            val response = postService.dislikeById(id)
+                            val response = postService.notApproveById(id)
                             call.respond(response)
                         }
 
-                        post("/{id}/not_approve") {
-                            //toDO
+                        post("/{id}/unselected_approves") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
                                 "Long"
                             )
-                            val response = postService.dislikeById(id)
+                            val response = postService.unselectedApproves(id)
                             call.respond(response)
                         }
 

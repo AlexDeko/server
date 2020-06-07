@@ -8,7 +8,8 @@ interface PostRepository {
     suspend fun save(item: PostModel, ownerId: Long): PostModel
     suspend fun update(item: PostModel, ownerId: Long): PostModel
     suspend fun removeById(id: Long, ownerId: Long)
-    suspend fun likeById(id: Long): PostModel?
-    suspend fun dislikeById(id: Long): PostModel?
+    suspend fun approveById(id: Long): PostModel?
+    suspend fun notApproveById(id: Long): PostModel?
+    suspend fun unselectedApproves(id: Long): PostModel?
     suspend fun repostById(id: Long, ownerId: Long, time: Long): PostModel?
 }

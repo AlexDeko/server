@@ -5,9 +5,6 @@ import com.post.dto.PostRequestDto
 import com.post.dto.PostResponseDto
 import com.post.model.PostModel
 import com.post.repository.PostRepository
-import org.kodein.di.generic.instance
-import org.kodein.di.ktor.kodein
-import java.time.LocalDateTime
 import java.util.*
 
 class PostService(private val repo: PostRepository) {
@@ -40,18 +37,16 @@ class PostService(private val repo: PostRepository) {
             author = input.author,
             createdDate = time,
             content = input.content,
-            countLike = input.countLike,
-            isLike = input.isLike,
+            isApprove = input.isApprove,
+            countApprove = input.countApprove,
+            isNotApprove = input.isNotApprove,
+            countNotApprove = input.countNotApprove,
             countRepost = input.countRepost,
             type = input.type,
-            adsUrl = input.adsUrl,
+            urlLink = input.urlLink,
             countViews = input.countViews,
             parentId = input.parentId,
-            imageId = input.imageId,
-            videoUrl = input.videoUrl,
-            countComment = input.countComment,
-            isCanCommented = input.isCanCommented,
-            selectedLocation = input.selectedLocation
+            imageId = input.imageId
         )
         return PostResponseDto.fromModel(repo.save(model, ownerId))
     }
@@ -64,18 +59,16 @@ class PostService(private val repo: PostRepository) {
             author = input.author,
             createdDate = time,
             content = input.content,
-            countLike = input.countLike,
-            isLike = input.isLike,
+            isApprove = input.isApprove,
+            countApprove = input.countApprove,
+            isNotApprove = input.isNotApprove,
+            countNotApprove = input.countNotApprove,
             countRepost = input.countRepost,
             type = input.type,
-            adsUrl = input.adsUrl,
+            urlLink = input.urlLink,
             countViews = input.countViews,
             parentId = input.parentId,
-            imageId = input.imageId,
-            videoUrl = input.videoUrl,
-            countComment = input.countComment,
-            isCanCommented = input.isCanCommented,
-            selectedLocation = input.selectedLocation
+            imageId = input.imageId
         )
         return PostResponseDto.fromModel(repo.update(model, ownerId))
     }
@@ -84,19 +77,25 @@ class PostService(private val repo: PostRepository) {
         repo.removeById(id, ownerId)
     }
 
-    suspend fun likedById(id: Long): PostResponseDto {
-        val model = repo.likeById(id) ?: throw NotFoundException()
+    suspend fun approveById(id: Long): PostResponseDto {
+        val model = repo.approveById(id) ?: throw NotFoundException()
         return PostResponseDto.fromModel(model)
     }
 
+    suspend fun notApproveById(id: Long): PostResponseDto {
+        val model = repo.notApproveById(id) ?: throw NotFoundException()
+        return PostResponseDto.fromModel(model)
+    }
+
+    suspend fun unselectedApproves(id: Long): PostResponseDto {
+        val model = repo.unselectedApproves(id) ?: throw NotFoundException()
+        return PostResponseDto.fromModel(model)
+    }
     suspend fun repostById(id: Long, ownerId: Long): PostResponseDto {
         val time = Date().time
         val model = repo.repostById(id, ownerId, time) ?: throw NotFoundException()
         return PostResponseDto.fromModel(model)
     }
 
-    suspend fun dislikeById(id: Long): PostResponseDto {
-        val model = repo.dislikeById(id) ?: throw NotFoundException()
-        return PostResponseDto.fromModel(model)
-    }
+
 }

@@ -4,16 +4,14 @@ create TABLE POSTS (
     author varchar(100),
     created_date bigint,
     content_text varchar(100),
-    count_like bigint,
-    is_like boolean,
+    is_approve boolean,
+    count_approve bigint,
+    is_not_approve boolean,
+    count_not_approve bigint,
     count_repost bigint,
     post_type varchar(100),
-    ads_url varchar(100),
+    url_link varchar(100),
     count_views bigint,
     parent_id bigint,
-    image_id varchar(100),
-    video_url varchar(100),
-    count_comment bigint,
-    is_can_commented boolean,
-    selected_location varchar(100)
+    image_id varchar(100)
 )
