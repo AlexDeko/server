@@ -1,6 +1,5 @@
 package com.post.db.data.user
 
-import com.post.db.data.post.Posts
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 
@@ -13,5 +12,5 @@ object Users : Table() {
     val not_approve: Column<Long> = long("not_approve")
     val approve: Column<Long> = long("approve")
     val only_reads: Column<Boolean> = bool("only_reads")
-    val firebase_id: Column<String?> = Posts.varchar("token_firebase", 1000).nullable()
+    val firebase_id: Column<String?> = varchar("token_firebase", 1000).nullable()
 }

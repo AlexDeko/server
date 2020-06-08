@@ -5,9 +5,9 @@ import com.post.model.getReactionByString
 import org.jetbrains.exposed.sql.ResultRow
 
 fun ResultRow.toReaction() = ReactionModel(
-    id = this[Reactions.id],
-    postId = this[Reactions.post_id],
-    userId = this[Reactions.user_id],
-    createdDate = this[Reactions.created_date],
-    reactionType = getReactionByString(this[Reactions.reaction_type])
+    id = this[Reaction.id],
+    postId = this[Reaction.post_id],
+    userId = this[Reaction.user_id],
+    createdDate = this[Reaction.created_date],
+    reactionType = getReactionByString(this[Reaction.reaction_type])
 )
