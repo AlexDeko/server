@@ -95,10 +95,8 @@ class RoutingV1(
 
                         post("/save") {
                             val input = call.receive<PostRequestDto>()
-                            val token = call.receiveText()
                             val response = postService.save(input, me!!.id)
                             val user = userService.getById(response.ownerId)
-                            userService.update(userDto = user.copy(firebaseId = token))
                             if (user.firebaseId!!.isNotEmpty()) firebaseService.send(
                                 response.id,
                                 user.firebaseId,
@@ -178,6 +176,8 @@ class RoutingV1(
                             val user = call.receive<UserResponseDto>()
                             userService.update(user)
                         }
+
+
                     }
 
                     route("/media") {

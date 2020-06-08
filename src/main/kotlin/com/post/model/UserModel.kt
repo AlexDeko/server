@@ -28,10 +28,6 @@ fun UserModel.toDto() = UserResponseDto(
     firebaseId = firebaseId
 )
 
-fun getBadgeByString(badge: String): UserBadge? {
-    for (i in 0..UserBadge.values().size) {
-        val targetBadge = UserBadge.values()[i]
-        if (targetBadge.name == badge) return targetBadge
-    }
-    return null
+fun getBadgeByString(badge: String): UserBadge? = UserBadge.values().find {
+    it.name == badge
 }
