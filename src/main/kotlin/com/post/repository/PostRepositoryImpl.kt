@@ -158,6 +158,7 @@ class PostRepositoryImpl : PostRepository {
                         updateStatement[countNotApprove] = post.countNotApprove
                     }
                 )
+
             } else {
                 post.isApprove = false
                 post.countApprove.dec()

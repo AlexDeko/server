@@ -111,17 +111,6 @@ class RoutingV1(
                             call.respond(response)
                         }
 
-                        post("/{id}/likes") {
-                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
-                                "id",
-                                "Long"
-                            )
-                            val response = postService.approveById(id)
-                            val user = userService.getById(response.ownerId)
-                            if (!user.firebaseId.isNullOrEmpty()) firebaseService.send(id, user.firebaseId, LIKE_MESSAGE)
-                            call.respond(response)
-                        }
-
                         post("/{id}/approves") {
                             val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
                                 "id",
@@ -129,7 +118,12 @@ class RoutingV1(
                             )
                             val response = postService.approveById(id)
                             val user = userService.getById(response.ownerId)
-                            if (!user.firebaseId.isNullOrEmpty()) firebaseService.send(id, user.firebaseId, LIKE_MESSAGE)
+                            if (!user.firebaseId.isNullOrEmpty()) firebaseService.send(
+                                id,
+                                user.firebaseId,
+                                LIKE_MESSAGE
+                            )
+                            userService.update(user.copy(approve = user.approve.inc()))
                             call.respond(response)
                         }
 
@@ -138,6 +132,8 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
+                            val user = me!!.toDto()
+                            userService.update(user.copy(notApprove = user.notApprove.inc()))
                             val response = postService.notApproveById(id)
                             call.respond(response)
                         }
@@ -147,6 +143,10 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
+                            val post = postService.getById(id)
+                            val user = me!!.toDto()
+                            if (post.isApprove) userService.update(user.copy(approve = user.approve.dec()))
+                            if (post.isNotApprove) userService.update(user.copy(notApprove = user.notApprove.dec()))
                             val response = postService.unselectedApproves(id)
                             call.respond(response)
                         }
