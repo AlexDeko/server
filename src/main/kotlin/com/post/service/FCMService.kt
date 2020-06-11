@@ -1,8 +1,6 @@
 package com.post.service
 
 
-
-
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
@@ -11,7 +9,6 @@ import com.google.firebase.messaging.FirebaseMessagingException
 import com.google.firebase.messaging.Message
 import com.post.dto.token.firebase.TokenFirebaseResponse
 import com.post.dto.token.firebase.toModel
-import com.post.model.token.firebase.TokenFirebaseModel
 import com.post.repository.TokenFirebaseRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -24,8 +21,10 @@ import java.nio.file.Paths
 const val LIKE_MESSAGE = "New Like"
 const val CREATE_POST_MESSAGE = "New Post"
 
-class FCMService(private val dbUrl: String, private val password: String, private val salt: String, private val path: String,
-                 private val repo: TokenFirebaseRepository) {
+class FCMService(
+    private val dbUrl: String, private val password: String, private val salt: String, private val path: String,
+    private val repo: TokenFirebaseRepository
+) {
     private var targetIdToken: Long = 0
 
     init {
@@ -43,7 +42,7 @@ class FCMService(private val dbUrl: String, private val password: String, privat
     suspend fun send(recipientId: Long, title: String, userId: Long) = withContext(Dispatchers.IO) {
         try {
             val tokens = repo.getAllByIdUser(userId)
-            for (e in tokens){
+            for (e in tokens) {
                 targetIdToken = e.id
                 val message = Message.builder()
                     .putData("recipientId", recipientId.toString())
@@ -53,7 +52,6 @@ class FCMService(private val dbUrl: String, private val password: String, privat
 
                 FirebaseMessaging.getInstance().send(message)
             }
-
 
 
         } catch (e: FirebaseMessagingException) {

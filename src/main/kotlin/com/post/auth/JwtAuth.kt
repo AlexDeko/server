@@ -1,8 +1,8 @@
 package com.post.auth
 
-import io.ktor.auth.jwt.JWTAuthenticationProvider
 import com.post.service.JWTTokenService
 import com.post.service.UserService
+import io.ktor.auth.jwt.JWTAuthenticationProvider
 
 class JwtAuth(
     private val jwtService: JWTTokenService,

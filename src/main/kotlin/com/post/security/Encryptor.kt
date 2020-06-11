@@ -12,13 +12,20 @@ fun main() {
         load(Files.newBufferedReader(Paths.get("./fcm/encrypt.properties")))
     }
 
-    val encryptor = Encryptors.stronger(properties.getProperty("password"),
-        Hex.encodeHexString(properties.getProperty("salt").toByteArray(Charsets.UTF_8)))
+    val encryptor = Encryptors.stronger(
+        properties.getProperty("password"),
+        Hex.encodeHexString(properties.getProperty("salt").toByteArray(Charsets.UTF_8))
+    )
     val encrypted = encryptor.encrypt(Files.readAllBytes(Paths.get("./fcm/fcm-raw.json")))
-    Files.write(Paths.get("./fcm/fcm-encrypted.json"), encrypted, StandardOpenOption.CREATE,
-        StandardOpenOption.TRUNCATE_EXISTING)
+    Files.write(
+        Paths.get("./fcm/fcm-encrypted.json"), encrypted, StandardOpenOption.CREATE,
+        StandardOpenOption.TRUNCATE_EXISTING
+    )
 
-    val decryptor = Encryptors.stronger(properties.getProperty("password"), Hex.encodeHexString(properties.getProperty("salt").toByteArray(Charsets.UTF_8)))
+    val decryptor = Encryptors.stronger(
+        properties.getProperty("password"),
+        Hex.encodeHexString(properties.getProperty("salt").toByteArray(Charsets.UTF_8))
+    )
     val decrypted = String(decryptor.decrypt(Files.readAllBytes(Paths.get("./fcm/fcm-encrypted.json"))))
     println(decrypted)
 }

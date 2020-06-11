@@ -1,10 +1,10 @@
 package com.post.service
 
-import io.ktor.features.NotFoundException
 import com.post.dto.PostRequestDto
 import com.post.dto.PostResponseDto
 import com.post.model.PostModel
 import com.post.repository.PostRepository
+import io.ktor.features.NotFoundException
 import java.util.*
 
 class PostService(private val repo: PostRepository) {
@@ -91,6 +91,7 @@ class PostService(private val repo: PostRepository) {
         val model = repo.unselectedApproves(id) ?: throw NotFoundException()
         return PostResponseDto.fromModel(model)
     }
+
     suspend fun repostById(id: Long, ownerId: Long): PostResponseDto {
         val time = Date().time
         val model = repo.repostById(id, ownerId, time) ?: throw NotFoundException()

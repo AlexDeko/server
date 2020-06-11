@@ -1,9 +1,5 @@
 package com.post.service
 
-import io.ktor.features.NotFoundException
-import kotlinx.coroutines.sync.Mutex
-import kotlinx.coroutines.sync.withLock
-import org.springframework.security.crypto.password.PasswordEncoder
 import com.post.dto.AuthenticationRequestDto
 import com.post.dto.AuthenticationResponseDto
 import com.post.dto.PasswordChangeRequestDto
@@ -14,6 +10,10 @@ import com.post.exception.UserExistsException
 import com.post.model.UserModel
 import com.post.model.toDto
 import com.post.repository.UserRepository
+import io.ktor.features.NotFoundException
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
+import org.springframework.security.crypto.password.PasswordEncoder
 
 class UserService(
     private val repo: UserRepository,
@@ -58,7 +58,7 @@ class UserService(
     }
 
     suspend fun register(username: String, password: String): AuthenticationResponseDto =
-         mutex.withLock {
+        mutex.withLock {
             if (repo.getByUsername(username) != null) {
                 throw UserExistsException("User exists!")
             }

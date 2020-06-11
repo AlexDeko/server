@@ -1,7 +1,7 @@
 package com.post.model
 
-import io.ktor.auth.Principal
 import com.post.dto.user.UserResponseDto
+import io.ktor.auth.Principal
 import kotlinx.serialization.Serializable
 
 @Serializable

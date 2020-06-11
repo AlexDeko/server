@@ -2,12 +2,11 @@ package com.post.repository
 
 import com.post.db.data.token.fairbase.TokensFirebase
 import com.post.db.data.token.fairbase.toTokenFirebase
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
 import com.post.db.dbQuery
 import com.post.model.token.firebase.TokenFirebaseModel
 import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.update
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 
 class TokenFirebaseRepositoryImpl : TokenFirebaseRepository {
     override suspend fun getByIdUser(id: Long): TokenFirebaseModel? =

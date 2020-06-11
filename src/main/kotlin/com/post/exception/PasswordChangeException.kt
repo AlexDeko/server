@@ -1,5 +1,3 @@
 package com.post.exception
 
-import java.lang.RuntimeException
-
-class PasswordChangeException(message: String): RuntimeException(message)
+class PasswordChangeException(message: String) : RuntimeException(message)

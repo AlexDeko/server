@@ -19,7 +19,7 @@ data class PostModel(
     val urlLink: String? = null,
     val countViews: Long = 0,
     val parentId: Long? = null,
-    val imageId: String?= null
+    val imageId: String? = null
 )
 
 

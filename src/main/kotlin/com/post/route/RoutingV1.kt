@@ -1,14 +1,5 @@
 package com.post.route
 
-import io.ktor.application.call
-import io.ktor.auth.authenticate
-import io.ktor.features.ParameterConversionException
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.content.*
-import io.ktor.request.receive
-import io.ktor.request.receiveMultipart
-import io.ktor.response.respond
-import io.ktor.routing.*
 import com.post.auth.BasicAuth
 import com.post.auth.JwtAuth
 import com.post.dto.AuthenticationRequestDto
@@ -20,7 +11,16 @@ import com.post.dto.user.UserResponseDto
 import com.post.model.ReactionType
 import com.post.model.toDto
 import com.post.service.*
-import io.ktor.request.receiveText
+import io.ktor.application.call
+import io.ktor.auth.authenticate
+import io.ktor.features.ParameterConversionException
+import io.ktor.http.HttpStatusCode
+import io.ktor.http.content.files
+import io.ktor.http.content.static
+import io.ktor.request.receive
+import io.ktor.request.receiveMultipart
+import io.ktor.response.respond
+import io.ktor.routing.*
 
 
 class RoutingV1(

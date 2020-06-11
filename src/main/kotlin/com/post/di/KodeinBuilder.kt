@@ -1,9 +1,5 @@
 package com.post.di
 
-import io.ktor.application.ApplicationEnvironment
-import org.kodein.di.Kodein
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import org.springframework.security.crypto.password.PasswordEncoder
 import com.post.auth.BasicAuth
 import com.post.auth.JwtAuth
 import com.post.db.data.DatabaseFactory
@@ -11,8 +7,11 @@ import com.post.exception.ConfigurationException
 import com.post.repository.*
 import com.post.route.RoutingV1
 import com.post.service.*
-import kotlinx.coroutines.runBlocking
+import io.ktor.application.ApplicationEnvironment
+import org.kodein.di.Kodein
 import org.kodein.di.generic.*
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.net.URI
 
 class KodeinBuilder(private val environment: ApplicationEnvironment) {

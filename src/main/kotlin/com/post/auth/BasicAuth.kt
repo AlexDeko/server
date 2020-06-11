@@ -1,8 +1,8 @@
 package com.post.auth
 
+import com.post.service.UserService
 import io.ktor.auth.BasicAuthenticationProvider
 import org.springframework.security.crypto.password.PasswordEncoder
-import com.post.service.UserService
 
 class BasicAuth(private val passwordEncoder: PasswordEncoder, private val userService: UserService) {
 

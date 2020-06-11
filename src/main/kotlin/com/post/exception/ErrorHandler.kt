@@ -18,6 +18,7 @@ object ErrorHandler {
             respondAndThrow<ForbiddenException>(HttpStatusCode.Forbidden)
         }
     }
+
     private inline fun <reified T : Throwable> StatusPages.Configuration.respondAndThrow(
         code: HttpStatusCode
     ) {

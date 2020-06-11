@@ -1,15 +1,13 @@
 package com.post.repository
 
-import com.post.db.data.post.Posts
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
 import com.post.db.data.user.Users
 import com.post.db.data.user.toUser
 import com.post.db.dbQuery
 import com.post.dto.user.UserResponseDto
 import com.post.model.UserBadge
 import com.post.model.UserModel
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
 
 class UserRepositoryImpl : UserRepository {

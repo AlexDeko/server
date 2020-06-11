@@ -63,7 +63,8 @@ class ReactionRepositoryImpl : ReactionRepository {
         dbQuery {
             Reactions.select(
                 where = (Reactions.user_id eq item.userId)
-                    .and(Reactions.post_id eq item.postId))
+                    .and(Reactions.post_id eq item.postId)
+            )
                 .singleOrNull()?.toReactions()
         }
 }
