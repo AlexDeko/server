@@ -67,9 +67,12 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                     instance(tag = FCM_DB_URL),
                     instance(tag = FCM_PASSWORD),
                     instance(tag = FCM_SALT),
-                    instance(tag = FCM_PATH)
+                    instance(tag = FCM_PATH),
+                    instance()
                 )
             }
+            bind<TokenFirebaseRepository>() with eagerSingleton { TokenFirebaseRepositoryImpl() }
+            bind<ReactionRepository>() with eagerSingleton { ReactionRepositoryImpl() }
 
             bind<RoutingV1>() with eagerSingleton {
                 RoutingV1(

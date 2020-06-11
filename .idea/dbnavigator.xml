@@ -34,7 +34,6 @@
   <component name="DBNavigator.Project.FileConnectionMappingManager">
     <mapping file-url="file://$PROJECT_DIR$/src/main/resources/db/migration/V2__create_post_table.sql" connection-id="virtual-postgres-connection" session-id="MAIN" current-schema="" />
     <mapping file-url="file://$PROJECT_DIR$/src/main/resources/db/migration/V1__create_user_table.sql" connection-id="virtual-postgres-connection" session-id="MAIN" current-schema="" />
-    <mapping file-url="file://$PROJECT_DIR$/src/main/resources/db/migration/V4__create_approves_table.sql" connection-id="virtual-postgres-connection" session-id="MAIN" current-schema="" />
     <mapping file-url="file://$PROJECT_DIR$/src/main/resources/db/migration/V5__create_token_fcm_table.sql" connection-id="virtual-postgres-connection" session-id="MAIN" current-schema="" />
     <mapping file-url="file://$PROJECT_DIR$/src/main/resources/db/migration/V3__create_reaction_table.sql" connection-id="virtual-postgres-connection" session-id="MAIN" current-schema="" />
   </component>

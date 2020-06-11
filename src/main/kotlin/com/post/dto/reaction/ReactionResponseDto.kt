@@ -1,11 +1,10 @@
-package com.post.model
+package com.post.dto.reaction
 
-import com.post.dto.reaction.ReactionResponseDto
-import kotlinx.serialization.Serializable
+import com.post.model.ReactionModel
+import com.post.model.ReactionType
 import java.util.*
 
-@Serializable
-data class ReactionModel(
+data class ReactionResponseDto(
     val id: Long = 0,
     val postId: Long,
     val userId: Long,
@@ -13,9 +12,7 @@ data class ReactionModel(
     val reactionType: ReactionType
 )
 
-fun getReactionByString(reaction: String) = ReactionType.valueOf(reaction)
-
-fun ReactionModel.toDto() = ReactionResponseDto(
+fun ReactionResponseDto.toModel() = ReactionModel(
     id = id,
     postId = postId,
     userId = userId,

@@ -3,7 +3,7 @@ package com.post.db.data.reaction
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.Table
 
-object Reaction : Table() {
+object Reactions : Table() {
     val id: Column<Long> = long("id").autoIncrement().primaryKey()
     val post_id: Column<Long> = long("post_id")
     val user_id: Column<Long> = long("user_id")

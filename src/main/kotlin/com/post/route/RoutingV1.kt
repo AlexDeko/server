@@ -13,8 +13,11 @@ import com.post.auth.BasicAuth
 import com.post.auth.JwtAuth
 import com.post.dto.AuthenticationRequestDto
 import com.post.dto.PostRequestDto
+import com.post.dto.reaction.ReactionResponseDto
+import com.post.dto.token.firebase.TokenFirebaseResponse
 import com.post.dto.user.UserRegisterRequestDto
 import com.post.dto.user.UserResponseDto
+import com.post.model.ReactionType
 import com.post.model.toDto
 import com.post.service.*
 import io.ktor.request.receiveText
@@ -81,6 +84,14 @@ class RoutingV1(
                                     "Int"
                                 )
                             val response = postService.getLastPage(countPage)
+                            for (post in response) {
+                                val reaction = reactionService
+                                    .getByIdPostAndIdUser(idPost = post.id, idUser = me!!.id)
+                                reaction?.let {
+                                    post.isApprove = it.reactionType == ReactionType.APPROVE
+                                    post.isNotApprove = it.reactionType == ReactionType.NOT_APPROVE
+                                }
+                            }
                             call.respond(response)
                         }
 
@@ -89,8 +100,18 @@ class RoutingV1(
                                 "id",
                                 "Long"
                             )
+                            val reaction = reactionService
+                                .getByIdPostAndIdUser(idPost = id, idUser = me!!.id)
                             val response = postService.getById(id)
-                            call.respond(response)
+                            reaction?.let {
+                                call.respond(
+                                    response.copy(
+                                        isApprove = it.reactionType == ReactionType.APPROVE,
+                                        isNotApprove = it.reactionType == ReactionType.NOT_APPROVE
+                                    )
+                                )
+                            }
+                                ?: call.respond(response)
                         }
 
                         post("/save") {
@@ -99,8 +120,8 @@ class RoutingV1(
                             val user = userService.getById(response.ownerId)
                             if (user.firebaseId!!.isNotEmpty()) firebaseService.send(
                                 response.id,
-                                user.firebaseId,
-                                CREATE_POST_MESSAGE
+                                CREATE_POST_MESSAGE,
+                                user.id
                             )
                             call.respond(response)
                         }
@@ -120,8 +141,11 @@ class RoutingV1(
                             val user = userService.getById(response.ownerId)
                             if (!user.firebaseId.isNullOrEmpty()) firebaseService.send(
                                 id,
-                                user.firebaseId,
-                                LIKE_MESSAGE
+                                LIKE_MESSAGE,
+                                user.id
+                            )
+                            reactionService.saveOrUpdateReaction(
+                                ReactionResponseDto(postId = id, userId = me!!.id, reactionType = ReactionType.APPROVE)
                             )
                             userService.update(user.copy(approve = user.approve.inc()))
                             call.respond(response)
@@ -134,6 +158,12 @@ class RoutingV1(
                             )
                             val user = me!!.toDto()
                             userService.update(user.copy(notApprove = user.notApprove.inc()))
+                            reactionService.saveOrUpdateReaction(
+                                ReactionResponseDto(
+                                    postId = id, userId = user.id,
+                                    reactionType = ReactionType.NOT_APPROVE
+                                )
+                            )
                             val response = postService.notApproveById(id)
                             call.respond(response)
                         }
@@ -147,6 +177,7 @@ class RoutingV1(
                             val user = me!!.toDto()
                             if (post.isApprove) userService.update(user.copy(approve = user.approve.dec()))
                             if (post.isNotApprove) userService.update(user.copy(notApprove = user.notApprove.dec()))
+                            reactionService.removeById(idUser = user.id, idPost = id)
                             val response = postService.unselectedApproves(id)
                             call.respond(response)
                         }
@@ -178,6 +209,13 @@ class RoutingV1(
                         }
 
 
+                    }
+
+                    route("/firebase") {
+                        post("/save") {
+                            val token = call.receive<TokenFirebaseResponse>()
+                            firebaseService.save(token)
+                        }
                     }
 
                     route("/media") {
