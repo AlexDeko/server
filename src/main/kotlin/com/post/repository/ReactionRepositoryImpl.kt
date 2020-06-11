@@ -36,7 +36,7 @@ class ReactionRepositoryImpl : ReactionRepository {
         }
     }
 
-    override suspend fun update(item: ReactionModel): Unit =
+    override suspend fun update(item: ReactionModel) {
         dbQuery {
             Reactions.update(where = {
                 (Reactions.user_id eq item.userId).and(Reactions.post_id eq item.postId)
@@ -47,13 +47,17 @@ class ReactionRepositoryImpl : ReactionRepository {
                 updateStatement[reaction_type] = item.reactionType.name
             })
         }
+    }
 
-    override suspend fun removeById(idPost: Long, idUser: Long): Unit =
+
+    override suspend fun removeById(idPost: Long, idUser: Long) {
         dbQuery {
             Reactions.deleteWhere {
                 (Reactions.user_id eq idUser).and(Reactions.post_id eq idPost)
             }
         }
+    }
+
 
     override suspend fun isFirstReaction(item: ReactionModel): ReactionModel? =
         dbQuery {

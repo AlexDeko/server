@@ -27,17 +27,21 @@ class TokenFirebaseRepositoryImpl : TokenFirebaseRepository {
             }
         }
 
-    override suspend fun save(item: TokenFirebaseModel): Unit =
+    override suspend fun save(item: TokenFirebaseModel) {
         dbQuery {
             TokensFirebase.insert { insertStatement ->
                 insertStatement[user_id] = item.userId
                 insertStatement[token] = item.token
             }
         }
+    }
 
-    override suspend fun removedById(id: Long): Unit = dbQuery {
-        TokensFirebase.deleteWhere {
-            TokensFirebase.id eq id
+
+    override suspend fun removedById(id: Long) {
+        dbQuery {
+            TokensFirebase.deleteWhere {
+                TokensFirebase.id eq id
+            }
         }
     }
 
