@@ -16,6 +16,7 @@ object ErrorHandler {
             respondAndThrow<UserExistsException>(HttpStatusCode.BadRequest)
             respondAndThrow<NotFoundException>(HttpStatusCode.NotFound)
             respondAndThrow<ForbiddenException>(HttpStatusCode.Forbidden)
+            respondAndThrow<UnauthorizedException>(HttpStatusCode.Unauthorized)
         }
     }
 
