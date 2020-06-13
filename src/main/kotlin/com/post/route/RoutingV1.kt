@@ -58,6 +58,7 @@ class RoutingV1(
                             call.respond(requireNotNull(me).toDto())
                         }
                     }
+
                     route("/posts") {
                         get {
                             val response = postService.getAll()

@@ -71,7 +71,6 @@ class KodeinBuilder(private val environment: ApplicationEnvironment) {
                 )
             }
             bind<TokenFirebaseRepository>() with eagerSingleton { TokenFirebaseRepositoryImpl() }
-            bind<ReactionRepository>() with eagerSingleton { ReactionRepositoryImpl() }
 
             bind<RoutingV1>() with eagerSingleton {
                 RoutingV1(
