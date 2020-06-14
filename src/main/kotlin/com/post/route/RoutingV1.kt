@@ -119,7 +119,7 @@ class RoutingV1(
                             val input = call.receive<PostRequestDto>()
                             val response = postService.save(input, me!!.id)
                             val user = userService.getById(response.ownerId)
-                            if (user.firebaseId!!.isNotEmpty()) firebaseService.send(
+                            if (!user.firebaseId!!.isNullOrEmpty()) firebaseService.send(
                                 response.id,
                                 CREATE_POST_MESSAGE,
                                 user.id
