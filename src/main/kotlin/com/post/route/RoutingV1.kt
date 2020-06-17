@@ -115,6 +115,15 @@ class RoutingV1(
                                 ?: call.respond(response)
                         }
 
+                        get("/{id}/reactions") {
+                            val id = call.parameters["id"]?.toLongOrNull() ?: throw ParameterConversionException(
+                                "id",
+                                "Long"
+                            )
+                            val response = reactionService.getAllByPostId(id = id)
+                            call.respond(response)
+                        }
+
                         post("/save") {
                             val input = call.receive<PostRequestDto>()
                             val response = postService.save(input, me!!.id)

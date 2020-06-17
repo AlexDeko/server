@@ -8,7 +8,7 @@ import com.post.repository.ReactionRepository
 
 class ReactionService(private val repo: ReactionRepository) {
 
-    suspend fun geAllByPostId(id: Long): List<ReactionModel> {
+    suspend fun getAllByPostId(id: Long): List<ReactionModel> {
         return repo.geAllByPostId(id)
     }
 
