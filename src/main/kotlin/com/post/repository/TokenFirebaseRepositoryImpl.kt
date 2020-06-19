@@ -4,9 +4,11 @@ import com.post.db.data.token.fairbase.TokensFirebase
 import com.post.db.data.token.fairbase.toTokenFirebase
 import com.post.db.dbQuery
 import com.post.model.token.firebase.TokenFirebaseModel
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 
 class TokenFirebaseRepositoryImpl : TokenFirebaseRepository {
     override suspend fun getByIdUser(id: Long): TokenFirebaseModel? =
@@ -35,6 +37,19 @@ class TokenFirebaseRepositoryImpl : TokenFirebaseRepository {
         }
     }
 
+    override suspend fun update(item: TokenFirebaseModel) {
+        dbQuery {
+            TokensFirebase.update(
+                where = {
+                    TokensFirebase.id eq item.id
+                },
+                body = { updateStatement ->
+                    updateStatement[user_id] = item.userId
+                    updateStatement[token] = item.token
+                }
+            )
+        }
+    }
 
     override suspend fun removedById(id: Long) {
         dbQuery {
@@ -43,7 +58,6 @@ class TokenFirebaseRepositoryImpl : TokenFirebaseRepository {
             }
         }
     }
-
 
 }
 

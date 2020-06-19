@@ -8,6 +8,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 
 class ReactionRepositoryImpl : ReactionRepository {
+
     override suspend fun geAllByPostId(idPost: Long): List<ReactionModel> =
         dbQuery {
             Reactions.selectAll().andWhere {
