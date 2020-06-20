@@ -65,7 +65,8 @@ class FCMService(
     }
 
     suspend fun save(item: TokenFirebaseResponse) {
-        if (repo.getByIdUser(item.id) != null) {
+        val check = repo.getByIdUser(item.id)
+        if (check != null) {
             repo.update(item.toModel())
         } else repo.save(item.toModel())
     }

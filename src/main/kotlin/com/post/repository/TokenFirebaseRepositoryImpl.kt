@@ -15,7 +15,7 @@ class TokenFirebaseRepositoryImpl : TokenFirebaseRepository {
         dbQuery {
             TokensFirebase.select {
                 TokensFirebase.user_id eq id
-            }.singleOrNull()?.toTokenFirebase()
+            }.singleOrNull()?.toTokenFirebase() ?: return@dbQuery null
         }
 
 
